@@ -1,0 +1,47 @@
+{
+  "created_at_utc": "2026-09-22T03:30:55.904717+00:00",
+  "master": "local[4]",
+  "shuffle_partitions": 32,
+  "train_rows": 2519826,
+  "valid_rows": 314807,
+  "test_rows": 325041,
+  "fit_rows": 2834633,
+  "selected_params": {
+    "rank": 16,
+    "regParam": 0.08,
+    "maxIter": 5
+  },
+  "selected_validation": {
+    "rank": 16,
+    "regParam": 0.08,
+    "maxIter": 5,
+    "rows": 311174,
+    "rmse": 0.8374090982052204,
+    "mae": 0.6475358221626316,
+    "coverage": 0.98845959587938
+  },
+  "test_rating_metrics": {
+    "rows": 321177,
+    "rmse": 0.8492306152653174,
+    "mae": 0.6573743188907775,
+    "coverage": 0.9881122689137678
+  },
+  "test_topk_metrics": {
+    "k": 10,
+    "relevance_threshold": 4.0,
+    "relevant_rows_total": 155129,
+    "relevant_rows_in_catalog": 154028,
+    "relevant_catalog_coverage": 0.9929026809945272,
+    "relevant_users": 19086,
+    "users_with_recommendations": 19086,
+    "user_coverage": 1.0,
+    "precision_at_k": 0.0,
+    "recall_at_k": 0.0,
+    "ndcg_at_k": 0.0
+  },
+  "tuning_csv": "D:\\Học tập\\bigdata\\reports\\tables\\als_tuning.csv",
+  "model_dir": "D:\\Học tập\\bigdata\\models\\als_final\\model",
+  "recommendations_dir": "D:\\Học tập\\bigdata\\models\\als_final\\recommendations",
+  "demo_users": 200,
+  "elapsed_seconds": 72.113
+}

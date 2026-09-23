@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" width="300" height="450">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="450" rx="8" fill="url(#bgGrad)" />
+  <rect x="1" y="1" width="298" height="448" rx="7" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6 4" />
+
+  <!-- Film Roll / Clapperboard Icon -->
+  <g transform="translate(110, 160)" fill="url(#iconGrad)">
+    <!-- Clapperboard top / chevron -->
+    <path d="M5 10 L75 10 L70 0 L0 0 Z" fill="#94a3b8" />
+    <path d="M12 0 L18 10" stroke="#0f172a" stroke-width="3" />
+    <path d="M30 0 L36 10" stroke="#0f172a" stroke-width="3" />
+    <path d="M48 0 L54 10" stroke="#0f172a" stroke-width="3" />
+    <path d="M66 0 L72 10" stroke="#0f172a" stroke-width="3" />
+
+    <!-- Clapperboard body -->
+    <rect x="0" y="12" width="80" height="60" rx="4" fill="#334155" />
+
+    <!-- Film reel / star inside -->
+    <circle cx="40" cy="42" r="16" fill="#1e293b" />
+    <circle cx="40" cy="42" r="6" fill="#64748b" />
+    <circle cx="40" cy="30" r="3" fill="#64748b" />
+    <circle cx="40" cy="54" r="3" fill="#64748b" />
+    <circle cx="28" cy="42" r="3" fill="#64748b" />
+    <circle cx="52" cy="42" r="3" fill="#64748b" />
+  </g>
+
+  <!-- Text with XML numeric entities -->
+  <text x="150" y="270" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="600" fill="#94a3b8">
+    Ch&#432;a c&#243; poster
+  </text>
+  <text x="150" y="295" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#64748b">
+    MovieLens 32M
+  </text>
+</svg>

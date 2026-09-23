@@ -1,0 +1,50 @@
+{
+  "created_at_utc": "2026-09-22T04:05:08.780029+00:00",
+  "master": "local[4]",
+  "shuffle_partitions": 128,
+  "train_rows": 25520897,
+  "valid_rows": 3188339,
+  "test_rows": 3290968,
+  "fit_rows": 28709236,
+  "selected_params": {
+    "rank": 16,
+    "regParam": 0.08,
+    "maxIter": 5
+  },
+  "num_user_blocks": 50,
+  "num_item_blocks": 50,
+  "driver_memory": "16g",
+  "selected_validation": {
+    "rank": 16,
+    "regParam": 0.08,
+    "maxIter": 5,
+    "rows": 3181118,
+    "rmse": 0.8337907912479361,
+    "mae": 0.6511669858819498,
+    "coverage": 0.9977351843702944
+  },
+  "test_rating_metrics": {
+    "rows": 3282031,
+    "rmse": 0.8474497120866703,
+    "mae": 0.662661435327706,
+    "coverage": 0.9972843856275722
+  },
+  "test_topk_metrics": {
+    "k": 10,
+    "relevance_threshold": 4.0,
+    "relevant_rows_total": 1559731,
+    "relevant_rows_in_catalog": 1557777,
+    "relevant_catalog_coverage": 0.9987472198731704,
+    "relevant_users": 190999,
+    "users_with_recommendations": 190999,
+    "user_coverage": 1.0,
+    "precision_at_k": 5.235629505913643e-07,
+    "recall_at_k": 1.0265940207673811e-07,
+    "ndcg_at_k": 3.4688256720919494e-07
+  },
+  "tuning_csv": "D:\\Học tập\\bigdata\\reports\\tables\\full\\als_tuning.csv",
+  "model_dir": "D:\\Học tập\\bigdata\\models\\als_full\\model",
+  "recommendations_dir": "D:\\Học tập\\bigdata\\models\\als_full\\recommendations",
+  "demo_users": 500,
+  "elapsed_seconds": 590.302
+}

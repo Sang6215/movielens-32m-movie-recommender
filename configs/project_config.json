@@ -1,0 +1,18 @@
+{
+  "raw_data_dir": "ml-32m",
+  "processed_parquet_dir": "data/processed/parquet",
+  "interim_dir": "data/interim",
+  "report_dir": "reports",
+  "expected_rows": {
+    "ratings.csv": 32000204,
+    "movies.csv": 87585,
+    "tags.csv": 2000072,
+    "links.csv": 87585
+  },
+  "expected_headers": {
+    "ratings.csv": ["userId", "movieId", "rating", "timestamp"],
+    "movies.csv": ["movieId", "title", "genres"],
+    "tags.csv": ["userId", "movieId", "tag", "timestamp"],
+    "links.csv": ["movieId", "imdbId", "tmdbId"]
+  }
+}

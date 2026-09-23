@@ -1,0 +1,51 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# MovieLens source data and generated training outputs (download/build locally)
+/ml-32m/
+/data/
+/models/
+/artifacts/catalog/
+/artifacts/demo/
+/artifacts/cache/
+
+# Local Spark/Hadoop runtime files and temporary output
+/.hadoop/
+/spark_tmp/
+/logs/
+*.log
+*.crc
+
+# Frontend dependencies and compiled output
+/frontend/node_modules/
+/frontend/dist/
+/frontend/*.tsbuildinfo
+/frontend/coverage/
+
+# Generated report files and smoke-run scratch results
+reports/figures/*.png
+reports/tables/*.csv
+reports/tables/**/*.csv
+reports/tables/_stack_smoke_*/
+
+# Temporary/editor files
+~$*
+/Huong_dan_do_an_Nhap_mon_Big_Data_HUIT.docx
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+Thumbs.db
+.DS_Store
