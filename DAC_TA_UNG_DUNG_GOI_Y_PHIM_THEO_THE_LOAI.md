@@ -1,7 +1,7 @@
 # Đặc tả ứng dụng gợi ý phim theo thể loại yêu thích
 
 - **Đề tài:** Hệ thống gợi ý phim với MovieLens 32M.
-- **Ngày lập:** 22/09/2026; cập nhật: 23/09/2026.
+- **Ngày lập:** 22/09/2026; cập nhật: 01/10/2026.
 - **Trạng thái:** Đã triển khai giao diện CINE32 bằng React/TypeScript và FastAPI (`frontend/`, `web_api.py`). `app.py` là bản Streamlit cũ.
 
 ## 1. Sản phẩm cần xây dựng
@@ -11,6 +11,8 @@ Xây dựng ứng dụng web tiếng Việt cho phép người dùng nhập ho�
 Người dùng mới sử dụng được ngay, không cần tài khoản hoặc User ID trong MovieLens. Bản đầu tập trung vào tìm phim theo sở thích thể loại; dữ liệu đánh giá lấy từ MovieLens 32M, hình ảnh lấy từ TMDB qua ID liên kết.
 
 “Đánh giá” trong phiên bản này là **điểm chấm của cộng đồng**, không phải bài bình luận bằng văn bản. MovieLens không cung cấp bài nhận xét phim; tính năng đó có thể bổ sung sau.
+
+**Bổ sung để bảo vệ đồ án:** mục riêng **Gợi ý ALS** cho phép nhập User ID MovieLens và xem Top 10 cá nhân hóa, lịch sử đã đánh giá, điểm ALS và phương án cho user mới. Luồng thể loại vẫn tự cập nhật toàn bộ phim phù hợp. Chi tiết: [HDFS và demo ALS](HUONG_DAN_HDFS_VA_DEMO_ALS.md).
 
 ## 2. Luồng sử dụng
 

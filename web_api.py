@@ -30,6 +30,7 @@ from recommender.genre_recommender import (  # noqa: E402
     normalize_to_en,
     recommend_by_genres,
 )
+from recommender.als_recommender import ALSRecommender  # noqa: E402
 from recommender.poster_cache import PLACEHOLDER_PATH  # noqa: E402
 from recommender.poster_loader import get_poster_loader  # noqa: E402
 from recommender.tmdb_client import (  # noqa: E402
@@ -41,6 +42,7 @@ from recommender.tmdb_client import (  # noqa: E402
 CATALOG_PATH = ROOT / "artifacts" / "catalog" / "movie_catalog.parquet"
 MANIFEST_PATH = ROOT / "artifacts" / "catalog" / "manifest.json"
 DIST_DIR = ROOT / "frontend" / "dist"
+ALS_DIR = ROOT / "artifacts" / "als_serving"
 PAGE_SIZE = 24
 FEATURED_MOVIE_IDS = (318, 202439, 858, 79132)
 POSTER_LOADER = get_poster_loader()
@@ -80,6 +82,18 @@ def _manifest() -> dict[str, Any]:
     if not MANIFEST_PATH.exists():
         return {}
     return _load_manifest(_file_version(MANIFEST_PATH))
+
+
+@lru_cache(maxsize=1)
+def _load_als(artifact_version: tuple[int, int], manifest_version: tuple[int, int], catalog_version: tuple[int, int]) -> ALSRecommender:
+    return ALSRecommender(ALS_DIR, _catalog())
+
+
+def _als() -> ALSRecommender:
+    if not (ALS_DIR / "factors_and_history.npz").exists() or not (ALS_DIR / "manifest.json").exists():
+        raise HTTPException(status_code=503, detail="Chưa có dữ liệu ALS. Chạy scripts/12_prepare_als_serving.py trước.")
+    return _load_als(_file_version(ALS_DIR / "factors_and_history.npz"),
+                     _file_version(ALS_DIR / "manifest.json"), _file_version(CATALOG_PATH))
 
 
 def _optional_int(value: Any) -> int | None:
@@ -142,7 +156,7 @@ def _movie_payload(
     imdb_id = normalize_imdb_id(
         str(row["imdbId"]) if pd.notna(row.get("imdbId")) else None
     )
-    return {
+    payload = {
         "movieId": int(row["movieId"]),
         "title": str(row["title"]),
         "displayTitle": _display_title(str(row["title"])),
@@ -161,6 +175,13 @@ def _movie_payload(
         "tmdbUrl": detail.web_url if detail and detail.status == "ok" else None,
         "imdbUrl": f"https://www.imdb.com/title/tt{imdb_id}/" if imdb_id else None,
     }
+    if "prediction" in row:
+        payload["predictionScore"] = _optional_float(row.get("prediction"))
+    if "rank" in row:
+        payload["personalRank"] = _optional_int(row.get("rank"))
+    if "history_rating" in row:
+        payload["historyRating"] = _optional_float(row.get("history_rating"))
+    return payload
 
 
 def _serialize_rows(rows: list[Mapping[str, Any]]) -> tuple[list[dict[str, Any]], int]:
@@ -218,6 +239,35 @@ def featured() -> dict[str, Any]:
     )
     items, pending = _serialize_rows(rows)
     return {"items": items, "pendingPosters": pending}
+
+
+@app.get("/api/als/meta")
+def als_meta() -> dict[str, Any]:
+    engine = _als()
+    return {
+        "users": len(engine.user_ids),
+        "candidateMovies": len(engine.item_ids),
+        "minRatingCount": engine.manifest["min_rating_count"],
+        "topK": engine.manifest["top_k"],
+        "selectedParams": engine.manifest["selected_params"],
+        "testRatingMetrics": engine.manifest["test_rating_metrics"],
+        "exampleUserIds": [int(uid) for uid in engine.user_ids[:5]],
+    }
+
+
+@app.get("/api/als/recommendations")
+def personal_recommendations(user_id: int = Query(ge=0, le=2_147_483_647)) -> dict[str, Any]:
+    result = _als().recommend(user_id)
+    items, pending = _serialize_rows(result.movies.to_dict(orient="records"))
+    history, history_pending = _serialize_rows(result.history.to_dict(orient="records"))
+    return {
+        "userId": user_id, "knownUser": result.known_user,
+        "strategy": "als" if result.known_user else "weighted_score_fallback",
+        "items": items, "history": history, "historyCount": result.history_count,
+        "pendingPosters": pending + history_pending,
+        "message": "Top 10 phim chưa được người dùng đánh giá."
+                   if result.known_user else "Người dùng chưa có lịch sử trong mô hình. Hiển thị phim được cộng đồng đánh giá cao.",
+    }
 
 
 @app.get("/api/movies")

@@ -1,0 +1,173 @@
+{
+  "created_at_utc": "2026-09-25T14:13:14.373676+00:00",
+  "model_dir": "D:\\Học tập\\bigdata\\models\\als_full_iter_20260922_120859",
+  "top_k": 10,
+  "relevance_threshold": 4.0,
+  "total_eligible_test_users": 190999,
+  "evaluated_user_sample": 10000,
+  "diagnostics_section_6_1_and_6_2": {
+    "demo_users_checked": 500,
+    "total_demo_recommendation_rows": 5000,
+    "min_recs_per_demo_user": 10,
+    "max_recs_per_demo_user": 10,
+    "users_with_full_10_recs": 500,
+    "seen_history_overlap_count": 0,
+    "recommended_item_rating_count_stats": {
+      "min": 1,
+      "median": 1.0,
+      "mean": 1.9804,
+      "p90": 4.0,
+      "max": 52,
+      "pct_with_le_5_ratings": 94.98,
+      "pct_with_le_10_ratings": 99.08,
+      "pct_with_ge_100_ratings": 0.0
+    },
+    "predicted_score_stats": {
+      "min": 3.0342373847961426,
+      "median": 5.372431755065918,
+      "mean": 5.378798294496536,
+      "max": 8.551763534545898,
+      "pct_above_5_stars": 76.06
+    },
+    "top_10_most_recommended_als_movies": [
+      {
+        "movieId": 265364,
+        "title": "One Breath Around The World (2019)",
+        "recommended_times": 370,
+        "mean_predicted_score": 5.443859083588059,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 205453,
+        "title": "The Good Fight: The Abraham Lincoln Brigade in the Spanish Civil War (1984)",
+        "recommended_times": 315,
+        "mean_predicted_score": 5.4000687508356,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 219031,
+        "title": "Pornography: A Secret History of Civilisation (1999)",
+        "recommended_times": 297,
+        "mean_predicted_score": 5.36871043439666,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 231287,
+        "title": "LIFE BEYOND: Chapter 1. Alien life, deep time, and our place in cosmic history (2019)",
+        "recommended_times": 279,
+        "mean_predicted_score": 5.380719155820894,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 231289,
+        "title": "LIFE BEYOND: Chapter 2. The Museum of Alien Life (2020)",
+        "recommended_times": 264,
+        "mean_predicted_score": 5.39494371956045,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 225435,
+        "title": "Wesley (2009)",
+        "recommended_times": 223,
+        "mean_predicted_score": 5.872368412702073,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 194434,
+        "title": "Adrenaline (1990)",
+        "recommended_times": 195,
+        "mean_predicted_score": 5.417060506038177,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 222368,
+        "title": "Crazy Romance (2019)",
+        "recommended_times": 188,
+        "mean_predicted_score": 5.469750465230739,
+        "catalog_rating_count": 2,
+        "catalog_avg_rating": 4.75
+      },
+      {
+        "movieId": 183947,
+        "title": "NOFX Backstage Passport 2",
+        "recommended_times": 181,
+        "mean_predicted_score": 5.339107028687198,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      },
+      {
+        "movieId": 193817,
+        "title": "Kill Your Idols (2004)",
+        "recommended_times": 174,
+        "mean_predicted_score": 5.3873246318992525,
+        "catalog_rating_count": 1,
+        "catalog_avg_rating": 5.0
+      }
+    ]
+  },
+  "comparison_section_6_3": [
+    {
+      "method": "ALS Explicit (Toàn bộ catalog 77,409 phim)",
+      "candidate_movies": 77409,
+      "evaluated_users": 10000,
+      "users_with_full_k_pct": 1.0,
+      "min_recs_per_user": 10,
+      "mean_recs_per_user": 10.0,
+      "precision_at_k": 2e-05,
+      "recall_at_k": 6.896551724137931e-06,
+      "ndcg_at_k": 1.33052010135729e-05
+    },
+    {
+      "method": "ALS Explicit + Lọc ngưỡng (rating_count >= 100)",
+      "candidate_movies": 11330,
+      "evaluated_users": 10000,
+      "users_with_full_k_pct": 1.0,
+      "min_recs_per_user": 10,
+      "mean_recs_per_user": 10.0,
+      "precision_at_k": 0.014670000000000002,
+      "recall_at_k": 0.026738281416543042,
+      "ndcg_at_k": 0.02258633733948307
+    },
+    {
+      "method": "ALS Explicit + Lọc ngưỡng (rating_count >= 500)",
+      "candidate_movies": 5760,
+      "evaluated_users": 10000,
+      "users_with_full_k_pct": 1.0,
+      "min_recs_per_user": 10,
+      "mean_recs_per_user": 10.0,
+      "precision_at_k": 0.021640000000000003,
+      "recall_at_k": 0.03618251656229146,
+      "ndcg_at_k": 0.030951012286347158
+    },
+    {
+      "method": "Baseline Weighted Score (m=100, công thức CINE32)",
+      "candidate_movies": 77409,
+      "evaluated_users": 10000,
+      "users_with_full_k_pct": 1.0,
+      "min_recs_per_user": 10,
+      "mean_recs_per_user": 10.0,
+      "precision_at_k": 0.012310000000000001,
+      "recall_at_k": 0.020328312671477507,
+      "ndcg_at_k": 0.015090525655455107
+    },
+    {
+      "method": "Baseline Popularity (Theo số lượt đánh giá cao nhất)",
+      "candidate_movies": 77409,
+      "evaluated_users": 10000,
+      "users_with_full_k_pct": 1.0,
+      "min_recs_per_user": 10,
+      "mean_recs_per_user": 10.0,
+      "precision_at_k": 0.03172,
+      "recall_at_k": 0.05372815965750183,
+      "ndcg_at_k": 0.050040045035458856
+    }
+  ],
+  "elapsed_seconds": 12.432
+}

@@ -1,0 +1,49 @@
+{
+  "created_at_utc": "2026-10-01T14:52:22.234227+00:00",
+  "success": true,
+  "users": 200948,
+  "indexed_history_rows": 32000204,
+  "candidate_movies": 11330,
+  "checked_users": [
+    {
+      "user_id": 1,
+      "recommendations": 10,
+      "history_count": 141,
+      "seen_overlap": 0
+    },
+    {
+      "user_id": 2,
+      "recommendations": 10,
+      "history_count": 52,
+      "seen_overlap": 0
+    },
+    {
+      "user_id": 3,
+      "recommendations": 10,
+      "history_count": 147,
+      "seen_overlap": 0
+    },
+    {
+      "user_id": 100,
+      "recommendations": 10,
+      "history_count": 249,
+      "seen_overlap": 0
+    },
+    {
+      "user_id": 500,
+      "recommendations": 10,
+      "history_count": 62,
+      "seen_overlap": 0
+    },
+    {
+      "user_id": 200948,
+      "recommendations": 10,
+      "history_count": 236,
+      "seen_overlap": 0
+    }
+  ],
+  "unknown_user_fallback": true,
+  "spark_web_top10_match": true,
+  "max_spark_web_score_difference": 3.616166148745492e-07,
+  "model_retrained": false
+}

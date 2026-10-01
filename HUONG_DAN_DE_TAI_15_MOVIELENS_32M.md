@@ -1,6 +1,8 @@
 # Hướng dẫn thực hiện đề tài 15 hệ thống gợi ý phim với MovieLens 32M
 
-Tài liệu này hướng dẫn nhóm 2 sinh viên xây dựng hệ thống gợi ý phim cho môn **Nhập môn Big Data**, từ chuẩn bị dữ liệu đến thực nghiệm, demo và hoàn thiện hồ sơ nộp bài. Phương án triển khai là **HDFS + PySpark + Spark MLlib ALS + Streamlit**.
+Tài liệu này hướng dẫn nhóm 2 sinh viên xây dựng hệ thống gợi ý phim cho môn **Nhập môn Big Data**, từ chuẩn bị dữ liệu đến thực nghiệm, demo và hoàn thiện hồ sơ nộp bài. Phương án hiện tại là **HDFS + PySpark + Spark MLlib ALS + React/TypeScript + FastAPI**.
+
+**Cập nhật 01/10/2026:** HDFS và demo ALS theo User ID là yêu cầu bắt buộc đã được xác nhận cho đồ án. CINE32 đã bổ sung mục Gợi ý ALS; quy trình Windows HDFS và bằng chứng Spark đọc/ghi toàn bộ 32M nằm trong [Hướng dẫn HDFS và demo ALS](HUONG_DAN_HDFS_VA_DEMO_ALS.md). Các ví dụ Streamlit phía dưới là phương án mẫu ban đầu; `app.py` hiện chỉ là bản khám phá theo thể loại cũ, demo ALS thực tế nằm trong React + FastAPI.
 
 Tài liệu được xây dựng từ [Hướng dẫn đồ án Nhập môn Big Data HUIT](<D:/Học tập/bigdata/Huong_dan_do_an_Nhap_mon_Big_Data_HUIT.docx>), đặc biệt là đề tài số 15 và các mục yêu cầu chung, sản phẩm, cấu trúc báo cáo. Những lựa chọn về phiên bản, cấu hình máy, lịch làm việc và tham số dưới đây là **đề xuất triển khai**, không phải quy định bổ sung của giảng viên.
 

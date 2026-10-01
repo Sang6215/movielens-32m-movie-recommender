@@ -1,5 +1,6 @@
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useState, type FormEvent } from "react";
 import { getFeatured, getMeta, getMovies, getPosters } from "./api";
+import PersonalRecommendations from "./PersonalRecommendations";
 import type { MetaResponse, Movie, MoviesResponse } from "./types";
 
 const formatNumber = new Intl.NumberFormat("vi-VN");
@@ -33,7 +34,7 @@ function ratingText(rating: number | null) {
 
 function mergeMovies(current: Movie[], updated: Movie[]): Movie[] {
   const byId = new Map(updated.map((movie) => [movie.movieId, movie]));
-  return current.map((movie) => byId.get(movie.movieId) ?? movie);
+  return current.map((movie) => ({ ...movie, ...byId.get(movie.movieId) }));
 }
 
 function scrollToResults() {
@@ -73,10 +74,12 @@ function MovieCard({ movie, onOpen }: { movie: Movie; onOpen: (movie: Movie) => 
   return (
     <button type="button" className="movie-card" onClick={() => onOpen(movie)} aria-label={`Xem chi tiết ${movie.displayTitle}`}>
       <div className="movie-poster-wrap">
+        {movie.personalRank && <span className="personal-rank">#{movie.personalRank}</span>}
         <img src={movie.posterUrl} alt={`Poster phim ${movie.displayTitle}`} loading="lazy" onError={(event) => { event.currentTarget.src = PLACEHOLDER; }} />
       </div>
       <div className="movie-card-body">
         <div className="card-rating"><span className="star">★</span><strong>{ratingText(movie.rating)}</strong><span className="rating-source">MovieLens</span></div>
+        {movie.predictionScore !== undefined && movie.predictionScore !== null && <p className="als-score">Điểm ALS <strong>{movie.predictionScore.toFixed(2).replace(".", ",")}</strong></p>}
         <h3>{movie.displayTitle}</h3>
         <p className="card-genres">{movie.genresVi.slice(0, 3).join(" · ") || "Chưa phân loại"}</p>
         <span className="card-detail">Chi tiết phim <ArrowIcon /></span>
@@ -107,6 +110,7 @@ function MovieModal({ movie, onClose }: { movie: Movie; onClose: () => void }) {
             {movie.titleVi && movie.titleVi !== movie.displayTitle && <p className="local-title">Tên trên TMDB: {movie.titleVi}</p>}
             <p className="modal-genres">{movie.genresVi.join("  •  ")}</p>
             <div className="modal-metrics">
+              {movie.predictionScore !== undefined && movie.predictionScore !== null && <div><span className="metric-label">ĐIỂM ALS DỰ ĐOÁN</span><strong>{movie.predictionScore.toFixed(2).replace(".", ",")}</strong></div>}
               <div><span className="metric-label">ĐIỂM MOVIELENS</span><strong><span className="star">★</span> {ratingText(movie.rating)}</strong></div>
               <div><span className="metric-label">LƯỢT ĐÁNH GIÁ</span><strong>{formatNumber.format(movie.ratingCount)}</strong></div>
               {movie.year && <div><span className="metric-label">NĂM</span><strong>{movie.year}</strong></div>}
@@ -140,6 +144,12 @@ function App() {
   const [retry, setRetry] = useState(0);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const updateOpenMovie = useCallback((movies: Movie[]) => {
+    setSelectedMovie((previous) => {
+      const update = movies.find((movie) => movie.movieId === previous?.movieId);
+      return previous && update ? { ...previous, ...update } : previous;
+    });
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -172,7 +182,7 @@ function App() {
           if (!previous || previous.items.map((movie) => movie.movieId).join(",") !== resultIds) return previous;
           return { ...previous, items: mergeMovies(previous.items, data.items), pendingPosters: data.pendingPosters };
         });
-        setSelectedMovie((previous) => data.items.find((movie) => movie.movieId === previous?.movieId) ?? previous);
+        updateOpenMovie(data.items);
       }).catch(() => undefined);
     }, 1400);
     return () => { active = false; window.clearInterval(timer); };
@@ -188,7 +198,7 @@ function App() {
         if (!active) return;
         setFeatured((previous) => mergeMovies(previous, data.items));
         setFeaturedPending(data.pendingPosters);
-        setSelectedMovie((previous) => data.items.find((movie) => movie.movieId === previous?.movieId) ?? previous);
+        updateOpenMovie(data.items);
       }).catch(() => undefined);
     }, 1400);
     return () => { active = false; window.clearInterval(timer); };
@@ -226,6 +236,7 @@ function App() {
           <nav className={`main-nav ${mobileNavOpen ? "open" : ""}`} aria-label="Điều hướng chính">
             <a href="#discover" onClick={() => setMobileNavOpen(false)}>Khám phá</a>
             <a href="#genres" onClick={() => setMobileNavOpen(false)}>Thể loại</a>
+            <a href="#personalized" onClick={() => setMobileNavOpen(false)}>Gợi ý ALS</a>
             <a href="#about" onClick={() => setMobileNavOpen(false)}>Nguồn dữ liệu</a>
           </nav>
           <form className="header-search" role="search" onSubmit={submitSearch}>
@@ -304,6 +315,7 @@ function App() {
             <div className="bottom-pagination"><span>{formatNumber.format(results.total)} phim trong kết quả</span><Pagination page={results.page} totalPages={results.totalPages} onPageChange={changePage} /></div>
           </>}
         </section>
+        <PersonalRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />
       </main>
 
       <footer id="about" className="site-footer">

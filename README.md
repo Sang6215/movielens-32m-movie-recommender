@@ -4,13 +4,15 @@ Project cho đề tài 15: hệ thống gợi ý phim dùng MovieLens 32M.
 
 Hướng dẫn chạy và so sánh 5–20 vòng ALS: [Hướng dẫn train MovieLens 32M](HUONG_DAN_TRAIN_ALS_MOVIELENS_32M.md).
 
+HDFS và demo gợi ý cá nhân theo User ID: [Hướng dẫn HDFS + ALS](HUONG_DAN_HDFS_VA_DEMO_ALS.md).
+
 ## Trạng thái hiện tại
 
 - Bộ dữ liệu MovieLens 32M cần được tải riêng vào `ml-32m/`; GitHub chỉ lưu mã nguồn và hướng dẫn, không chứa bộ dữ liệu gần 1 GB.
 - Đã hoàn thành pipeline đến **tuần 6**: ETL, EDA, chia dữ liệu, ALS, tuning, đánh giá test và xuất dữ liệu demo.
-- Spark chạy ở chế độ `local[4]`. Đây là cấu hình Spark song song trên máy cá nhân; HDFS có thể bổ sung khi nhóm triển khai trên WSL/Linux.
+- Spark chạy `local[4]`; HDFS một NameNode/một DataNode được quản lý bằng `scripts/11_hdfs_local.py`. Đây là môi trường một máy, không phải cụm nhiều máy.
 - Trong workspace hiện tại, grid full chọn `rank=16`, `regParam=0.08`, `maxIter=20` theo RMSE validation `0.800952`; model fit trên 28.709.236 rating train + validation, giữ 3.290.968 rating test ngoài bước học. Các model và dữ liệu xử lý không được commit lên GitHub; có thể tạo lại bằng scripts và hướng dẫn train.
-- Artifact demo ALS trong workspace gồm 500 người dùng và 5.000 dòng. Các chỉ số Top-K vẫn rất thấp và cần kiểm tra theo hướng dẫn train.
+- Demo ALS trực tuyến dùng vector của 200.948 user, loại phim đã đánh giá và lọc ứng viên có ít nhất 100 lượt chấm. Artifact 500 user cũ phục vụ thí nghiệm trước đây; chẩn đoán Top-K lưu trong `reports/tables/`.
 - Ứng dụng xem phim chính dùng **React/TypeScript + FastAPI**, giao diện tối và vàng lấy cảm hứng từ trang danh mục phim IMDb, với tên riêng CINE32. Ứng dụng đọc toàn bộ catalog MovieLens, lọc thể loại và tìm tên phim; bản `app.py` Streamlit được giữ làm bản thử nghiệm cũ.
 
 ## Cấu trúc
@@ -193,6 +195,7 @@ Cần Python 3.11+ và Node.js/npm. Chạy các lệnh sau từ thư mục gốc
 
 ```powershell
 py -m pip install -r requirements-web.txt
+py scripts/12_prepare_als_serving.py
 Set-Location frontend
 npm install
 npm run build

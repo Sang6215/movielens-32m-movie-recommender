@@ -4,6 +4,8 @@ Tài liệu cho đề tài 15 — hệ thống gợi ý phim. Các lệnh bên d
 
 **Mục tiêu:** so sánh 5, 10, 15 và 20 vòng lặp, chọn cấu hình bằng validation, đánh giá kết quả và đưa model vào demo. Grid full đã chạy xong; model được chọn hiện dùng **20 vòng**.
 
+**Cập nhật 01/10/2026:** đã bổ sung HDFS một máy và gợi ý ALS theo User ID trong CINE32. Dùng lại model hiện có theo [Hướng dẫn HDFS và demo ALS](HUONG_DAN_HDFS_VA_DEMO_ALS.md); không cần chạy lại grid train chỉ để mở demo.
+
 ## 1. Có nên train nhiều vòng không?
 
 Có thể thử, nhưng cần đo trên validation. Nhiều vòng hơn không bảo đảm model gợi ý tốt hơn.

@@ -1,9 +1,10 @@
-import type { MetaResponse, MoviesResponse, PosterResponse } from "./types";
+import type { ALSMetaResponse, MetaResponse, MoviesResponse, PersonalResponse, PosterResponse } from "./types";
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(path, { signal });
   if (!response.ok) {
-    throw new Error(`Không thể tải dữ liệu phim (${response.status}).`);
+    const error = await response.json().catch(() => null) as { detail?: unknown } | null;
+    throw new Error(typeof error?.detail === "string" ? error.detail : `Không thể tải dữ liệu phim (${response.status}).`);
   }
   return (await response.json()) as T;
 }
@@ -27,4 +28,12 @@ export function getPosters(movieIds: number[], signal?: AbortSignal) {
   const params = new URLSearchParams();
   movieIds.forEach((movieId) => params.append("movie_ids", String(movieId)));
   return getJson<PosterResponse>(`/api/posters?${params}`, signal);
+}
+
+export function getALSMeta(signal?: AbortSignal) {
+  return getJson<ALSMetaResponse>("/api/als/meta", signal);
+}
+
+export function getPersonalRecommendations(userId: number, signal?: AbortSignal) {
+  return getJson<PersonalResponse>(`/api/als/recommendations?user_id=${userId}`, signal);
 }

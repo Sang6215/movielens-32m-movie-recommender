@@ -1,0 +1,155 @@
+{
+  "created_at_utc": "2026-10-01T14:41:48.504256+00:00",
+  "run_id": "hdfs_20261001_144137",
+  "spark_master": "local[4]",
+  "spark_version": "3.5.7",
+  "hadoop_version": "3.3.4",
+  "hadoop_native_loaded": true,
+  "hdfs_base": "hdfs://127.0.0.1:9000/movielens",
+  "run_path": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137",
+  "model_retrained": false,
+  "live_datanodes": 1,
+  "datanodes": [
+    {
+      "name": "127.0.0.1:9866",
+      "capacity_bytes": 624916688896
+    }
+  ],
+  "other_tables": {
+    "movies": {
+      "rows": 87585,
+      "parquet_path": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137/processed/movies"
+    },
+    "tags": {
+      "rows": 2000072,
+      "parquet_path": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137/processed/tags"
+    },
+    "links": {
+      "rows": 87585,
+      "parquet_path": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137/processed/links"
+    }
+  },
+  "etl": {
+    "raw_rows": 32000204,
+    "valid_rows": 32000204,
+    "clean_rows": 32000204,
+    "invalid_rows": 0,
+    "duplicate_rows": 0,
+    "parquet_rows_readback": 32000204,
+    "parquet_path": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137/processed/ratings",
+    "input_file_example": "hdfs://127.0.0.1:9000/movielens/runs/hdfs_20261001_144137/processed/ratings/part-00028-e3846bc7-b3b7-4e7f-a3f9-b0aa96d3e273-c000.snappy.parquet"
+  },
+  "rating_distribution": [
+    {
+      "rating": 0.5,
+      "count": 525132
+    },
+    {
+      "rating": 1.0,
+      "count": 946675
+    },
+    {
+      "rating": 1.5,
+      "count": 531063
+    },
+    {
+      "rating": 2.0,
+      "count": 2028622
+    },
+    {
+      "rating": 2.5,
+      "count": 1685386
+    },
+    {
+      "rating": 3.0,
+      "count": 6054990
+    },
+    {
+      "rating": 3.5,
+      "count": 4290105
+    },
+    {
+      "rating": 4.0,
+      "count": 8367654
+    },
+    {
+      "rating": 4.5,
+      "count": 2974000
+    },
+    {
+      "rating": 5.0,
+      "count": 4596577
+    }
+  ],
+  "als_demo": {
+    "user_id": 1,
+    "source_model": "models/als_full_iter_20260922_120859",
+    "model_path": "hdfs://127.0.0.1:9000/movielens/models/als_full_iter_20260922_120859",
+    "seen_movies_excluded": 141,
+    "candidate_min_rating_count": 100,
+    "recommendations": [
+      {
+        "movieId": 68874,
+        "title": "Jeanne Dielman, 23 Quai du Commerce, 1080 Bruxelles (1975)",
+        "prediction": 4.316538925950524,
+        "rating_count": 160
+      },
+      {
+        "movieId": 6985,
+        "title": "Passion of Joan of Arc, The (Passion de Jeanne d'Arc, La) (1928)",
+        "prediction": 4.276506703462268,
+        "rating_count": 1225
+      },
+      {
+        "movieId": 82848,
+        "title": "One Week (1920)",
+        "prediction": 4.2581262640069255,
+        "rating_count": 138
+      },
+      {
+        "movieId": 105250,
+        "title": "Century of the Self, The (2002)",
+        "prediction": 4.256712146702237,
+        "rating_count": 306
+      },
+      {
+        "movieId": 198185,
+        "title": "Twin Peaks (1989)",
+        "prediction": 4.223885725631156,
+        "rating_count": 806
+      },
+      {
+        "movieId": 31545,
+        "title": "Trou, Le (Hole, The) (Night Watch, The) (1960)",
+        "prediction": 4.2201670982112685,
+        "rating_count": 300
+      },
+      {
+        "movieId": 44653,
+        "title": "Money (L'argent) (1983)",
+        "prediction": 4.211899605405314,
+        "rating_count": 152
+      },
+      {
+        "movieId": 26270,
+        "title": "Lone Wolf and Cub: Baby Cart at the River Styx (Kozure Ôkami: Sanzu no kawa no ubaguruma) (1972)",
+        "prediction": 4.211702399280203,
+        "rating_count": 140
+      },
+      {
+        "movieId": 7013,
+        "title": "Night of the Hunter, The (1955)",
+        "prediction": 4.199548417094015,
+        "rating_count": 2188
+      },
+      {
+        "movieId": 4426,
+        "title": "Kiss Me Deadly (1955)",
+        "prediction": 4.193373173482934,
+        "rating_count": 572
+      }
+    ]
+  },
+  "elapsed_seconds": 80.826,
+  "success": true
+}

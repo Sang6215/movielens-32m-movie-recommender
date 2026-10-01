@@ -1,0 +1,82 @@
+{
+  "created_at_utc": "2026-09-25T14:17:24.937264+00:00",
+  "storage_comparison": [
+    {
+      "dataset": "ratings",
+      "csv_size_mb": 836.45,
+      "parquet_size_mb": 209.44,
+      "space_saving_pct": 74.96
+    },
+    {
+      "dataset": "movies",
+      "csv_size_mb": 4.05,
+      "parquet_size_mb": 2.35,
+      "space_saving_pct": 41.98
+    },
+    {
+      "dataset": "tags",
+      "csv_size_mb": 69.0,
+      "parquet_size_mb": 19.97,
+      "space_saving_pct": 71.06
+    },
+    {
+      "dataset": "links",
+      "csv_size_mb": 1.86,
+      "parquet_size_mb": 1.9,
+      "space_saving_pct": -2.15
+    }
+  ],
+  "format_query_benchmark": {
+    "query": "Read 32M ratings + groupBy(movieId).agg(count, avg)",
+    "master": "local[4]",
+    "runs": 3,
+    "csv_times_sec": [
+      27.535,
+      19.69,
+      19.384
+    ],
+    "parquet_times_sec": [
+      3.04,
+      1.642,
+      1.567
+    ],
+    "csv_median_sec": 19.69,
+    "parquet_median_sec": 1.642,
+    "parquet_speedup_x": 11.99
+  },
+  "spark_thread_scaling": [
+    {
+      "master": "local[1]",
+      "threads": 1,
+      "train_rows": 2519826,
+      "valid_rows": 314807,
+      "load_and_cache_sec": 4.002,
+      "als_fit_and_eval_sec": 40.121,
+      "total_sec": 44.123,
+      "rmse": 0.836664,
+      "speedup_vs_1_thread": 1.0
+    },
+    {
+      "master": "local[2]",
+      "threads": 2,
+      "train_rows": 2519826,
+      "valid_rows": 314807,
+      "load_and_cache_sec": 2.744,
+      "als_fit_and_eval_sec": 20.388,
+      "total_sec": 23.132,
+      "rmse": 0.836664,
+      "speedup_vs_1_thread": 1.91
+    },
+    {
+      "master": "local[4]",
+      "threads": 4,
+      "train_rows": 2519826,
+      "valid_rows": 314807,
+      "load_and_cache_sec": 2.227,
+      "als_fit_and_eval_sec": 15.636,
+      "total_sec": 17.863,
+      "rmse": 0.836664,
+      "speedup_vs_1_thread": 2.47
+    }
+  ]
+}

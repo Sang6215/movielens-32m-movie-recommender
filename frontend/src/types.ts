@@ -21,6 +21,9 @@ export interface Movie {
   titleVi: string | null;
   tmdbUrl: string | null;
   imdbUrl: string | null;
+  predictionScore?: number | null;
+  personalRank?: number;
+  historyRating?: number;
 }
 
 export interface MetaResponse {
@@ -43,4 +46,23 @@ export interface MoviesResponse {
 export interface PosterResponse {
   items: Movie[];
   pendingPosters: number;
+}
+
+export interface ALSMetaResponse {
+  users: number;
+  candidateMovies: number;
+  minRatingCount: number;
+  topK: number;
+  exampleUserIds: number[];
+  selectedParams: { rank: number; regParam: number; maxIter: number };
+  testRatingMetrics: { rmse: number; mae: number; coverage: number };
+}
+
+export interface PersonalResponse extends PosterResponse {
+  userId: number;
+  knownUser: boolean;
+  strategy: "als" | "weighted_score_fallback";
+  history: Movie[];
+  historyCount: number;
+  message: string;
 }
