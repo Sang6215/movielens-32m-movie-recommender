@@ -6,6 +6,20 @@ Hướng dẫn chạy và so sánh 5–20 vòng ALS: [Hướng dẫn train Movie
 
 HDFS và demo gợi ý cá nhân theo User ID: [Hướng dẫn HDFS + ALS](HUONG_DAN_HDFS_VA_DEMO_ALS.md).
 
+## Chạy demo bằng model đã train
+
+[Bản phát hành v1.0.0](https://github.com/Sang6215/movielens-32m-movie-recommender/releases/tag/v1.0.0) có gói `cine32-demo-v1.0.0.zip` chứa catalog, vector ALS đã train, chỉ mục lịch sử và giao diện đã build. Chạy web bằng gói này không cần train lại, tải CSV gốc, cài Spark/HDFS hay build bằng Node.js. Cần Python 3.11+ và các thư viện web.
+
+Các bước tải, giải nén và kiểm tra checksum: [Hướng dẫn chạy demo](HUONG_DAN_CHAY_DEMO.md). Muốn tái tạo thí nghiệm train hoặc HDFS, dùng các hướng dẫn bên dưới.
+
+## Tài liệu báo cáo
+
+- [Báo cáo dạng Markdown](reports/BAO_CAO_BIG_DATA_THEO_MAU.md).
+- [Phân tích nghiệp vụ, Use Case và ERD](reports/PHAN_TICH_NGHIEP_VU_USECASE_ERD.md).
+- [Nguồn sơ đồ có thể chỉnh sửa bằng draw.io](reports/diagrams/CINE32_USECASE_ERD.drawio).
+
+Báo cáo Word và PowerPoint lưu trên máy của nhóm, không đưa lên GitHub theo yêu cầu. Các tài liệu Markdown cũ vẫn giữ để tham khảo quá trình thực hiện; bản cập nhật là các liên kết trên.
+
 ## Trạng thái hiện tại
 
 - Bộ dữ liệu MovieLens 32M cần được tải riêng vào `ml-32m/`; GitHub chỉ lưu mã nguồn và hướng dẫn, không chứa bộ dữ liệu gần 1 GB.
@@ -51,7 +65,7 @@ HDFS và demo gợi ý cá nhân theo User ID: [Hướng dẫn HDFS + ALS](HUONG
 └── src/recommender/                # Module nghiệp vụ, thuật toán gợi ý & TMDB API
 ```
 
-Các thư mục dataset, Parquet, model, cache TMDB, log, `node_modules` và bản build `frontend/dist/` được loại khỏi GitHub. Tải/tạo lại dữ liệu theo các bước bên dưới rồi build giao diện trước khi chạy ứng dụng. Tài liệu hướng dẫn đề tài dạng Markdown được giữ lại; bản Word hướng dẫn môn học và file khóa tạm của Office không được phát hành cùng mã nguồn.
+Các thư mục dataset, Parquet, model, cache TMDB, log, `node_modules` và bản build `frontend/dist/` được loại khỏi lịch sử Git. Gói demo trên GitHub Releases cung cấp riêng các artifact phục vụ web và frontend đã build. Nếu không dùng gói này, tải/tạo lại dữ liệu theo các bước bên dưới rồi build giao diện. Điều kiện sử dụng dữ liệu: [Thông báo nguồn MovieLens](THIRD_PARTY_NOTICES.md). File mẫu môn khác, Word, PowerPoint và file tạm không phát hành cùng mã nguồn.
 
 ## Cài môi trường Spark local
 

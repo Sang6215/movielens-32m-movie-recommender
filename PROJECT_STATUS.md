@@ -1,8 +1,8 @@
 # Project Status
 
-Ngày cập nhật: 2026-10-01
+Ngày cập nhật: 2026-10-03
 
-Repository công khai chỉ chứa mã nguồn, tài liệu và các bảng báo cáo tổng hợp. Dataset gốc, Parquet, model factor, cache và log trong các đường dẫn bên dưới là artifact cục bộ; chúng được tạo lại theo hướng dẫn trong [README.md](README.md) và không nằm trên GitHub.
+Repository công khai chứa mã nguồn, tài liệu Markdown, sơ đồ và các bảng báo cáo tổng hợp. Dataset gốc, Parquet huấn luyện, model Spark, cache và log không nằm trong lịch sử Git. Bản phát hành v1.0.0 cung cấp riêng gói phục vụ web gồm vector ALS, chỉ mục lịch sử, catalog và frontend đã build. Word, PowerPoint và file mẫu giữ cục bộ theo yêu cầu.
 
 ## Đã hoàn thành
 
@@ -35,7 +35,7 @@ Repository công khai chỉ chứa mã nguồn, tài liệu và các bảng báo
 
 - Đã tạo thống kê EDA trong `reports/tables/` và biểu đồ trong `reports/figures/` (`scripts/02_eda_local.py`).
 - Đã tạo sample phát triển (`userId % 10 == 0`) gồm 20,094 users và 3,159,674 ratings, cùng tập full (`userId % 1 == 0`) gồm 200,948 users và 32,000,204 ratings (`scripts/03_prepare_splits_local.py`).
-- Đã chia theo thứ tự thời gian trong từng user (chống rò rỉ dữ liệu tương lai):
+- Đã chia theo thứ tự thời gian trong từng user; chưa dùng mốc thời gian chung giữa các user:
 
 | Tập dữ liệu | Sample phát triển (`data/interim/`) | Toàn bộ 32M (`data/full_interim/`) |
 | --- | ---: | ---: |
@@ -69,7 +69,7 @@ Repository công khai chỉ chứa mã nguồn, tài liệu và các bảng báo
 - **Chẩn đoán Top-K và đối chiếu Baseline (`scripts/09_diagnose_topk_and_baseline.py`):**
   - Đã xác minh nguyên nhân ALS explicit toàn catalog có `Precision@10 ≈ 1.57e-6`: `94.98%` phim được ALS đề xuất trên toàn bộ catalog có `<= 5` lượt đánh giá (trung vị `1.0` lượt chấm 5 sao) với điểm dự đoán trung vị `5.37 > 5.0`.
   - Trong phép đối chiếu trên 10.000 user, ALS toàn catalog đạt `Precision@10 = 0.000020`. Lọc `rating_count >= 100` (11,330 phim) đạt `0.014670` (733,5 lần trong cùng phép đo, so với Weighted Score `0.012310`); ngưỡng `>= 500` đạt `0.021640`, `Recall@10 = 0.036183`, `NDCG@10 = 0.030951`. Không lấy hệ số cải thiện này so trực tiếp với độ đo toàn bộ test `1.57e-6` vì khác tập user.
-- **Ứng dụng web CINE32 (`web_api.py` + `frontend/`):** Giao diện React/TypeScript + FastAPI duyệt toàn bộ 87,585 phim theo thể loại tiếng Việt, xếp hạng theo `weighted_score` ($m=100$), tìm kiếm tức thời và tải poster/mô tả từ TMDB qua cache SQLite.
+- **Ứng dụng web CINE32 (`web_api.py` + `frontend/`):** Giao diện React/TypeScript + FastAPI duyệt toàn bộ 87,585 phim theo thể loại tiếng Việt, xếp hạng theo `weighted_score` ($m=100$), tìm tên phim khi gửi form/nhấn Enter và tải poster/mô tả từ TMDB qua cache SQLite.
 
 ### Bổ sung yêu cầu bắt buộc: HDFS và demo ALS (01/10/2026)
 
@@ -80,10 +80,20 @@ Repository công khai chỉ chứa mã nguồn, tài liệu và các bảng báo
 
 ### Tuần 7 & Tuần 8: Hồ sơ báo cáo, Slide thuyết trình và Kịch bản Demo
 
+- Đã tạo báo cáo Word 40 trang theo sườn DOCX/PDF mẫu, lưu cục bộ tại `reports/BAO_CAO_BIG_DATA_MOVIELENS_32M.docx`, không đưa lên GitHub. Báo cáo gồm 5 chương, mục lục tự động, 27 bảng, 11 hình và 4 phụ lục; đã render và kiểm tra bố cục. Nội dung dạng Markdown được phát hành: [reports/BAO_CAO_BIG_DATA_THEO_MAU.md](reports/BAO_CAO_BIG_DATA_THEO_MAU.md). Thông tin giảng viên, nhóm, lớp, thành viên, MSSV và đóng góp để trống theo yêu cầu.
+- Bổ sung phân tích nghiệp vụ tại mục 2.8–2.12: 12 quy tắc, 9 Use Case người xem, 5 Use Case vận hành, 2 sơ đồ Use Case và 2 ERD. Bản riêng: [reports/PHAN_TICH_NGHIEP_VU_USECASE_ERD.md](reports/PHAN_TICH_NGHIEP_VU_USECASE_ERD.md); nguồn sơ đồ chỉnh sửa: [reports/diagrams/CINE32_USECASE_ERD.drawio](reports/diagrams/CINE32_USECASE_ERD.drawio). Các thực thể logic và artifact Parquet/NPZ/SQLite được phân biệt; chưa mô tả đăng nhập hoặc chấm điểm mới như chức năng đã triển khai.
 - Đã hoàn thành bản thảo Báo cáo đồ án đầy đủ 10 phần theo chuẩn HUIT tại [reports/BAO_CAO_DO_AN_MOVIELENS_32M.md](reports/BAO_CAO_DO_AN_MOVIELENS_32M.md).
 - Đã hoàn thành nội dung 11 Slide thuyết trình, kịch bản Demo 5–7 phút, bộ câu hỏi bảo vệ đồ án và bảng phân công/checklist nộp bài tại [reports/SLIDE_VA_KICH_BAN_DEMO.md](reports/SLIDE_VA_KICH_BAN_DEMO.md).
+- Đã tạo PowerPoint 25 slide theo mẫu nhận diện HUIT, lưu cục bộ tại `reports/BAO_CAO_THUYET_TRINH_MOVIELENS_32M.pptx`, không đưa lên GitHub. Bản này dùng số liệu cập nhật từ báo cáo Word, gồm phân tích nghiệp vụ, 2 Use Case, 2 ERD, kiến trúc, huấn luyện ALS, kết quả thực nghiệm, HDFS, ảnh giao diện và kịch bản demo. Sơ đồ, bảng và biểu đồ có thể chỉnh sửa; từng slide có ghi chú và nguồn. Thông tin giảng viên và nhóm tiếp tục để trống.
 - Các artifact kiểm tra tạm, runtime và log được loại khỏi GitHub theo `.gitignore`.
+
+### Gói bàn giao web trên GitHub Releases
+
+- [CINE32 v1.0.0](https://github.com/Sang6215/movielens-32m-movie-recommender/releases/tag/v1.0.0) cung cấp `cine32-demo-v1.0.0.zip` và `SHA256SUMS.txt`.
+- Gói có catalog 87.585 phim, vector 200.948 user, 77.409 phim trong model, chỉ mục lịch sử 32.000.204 rating và frontend đã build. Số phim ứng viên ALS phục vụ là 11.330.
+- Có manifest SHA-256 từng file và README điều kiện sử dụng MovieLens. Hướng dẫn: [HUONG_DAN_CHAY_DEMO.md](HUONG_DAN_CHAY_DEMO.md); script tạo lại: `scripts/14_package_demo.py`.
+- Chạy web từ gói không cần train lại, Spark, HDFS hay Node.js. Cần Python 3.11+ và thư viện web; poster thật cần token TMDB riêng. Gói không chứa token, cache, file tạm, Word hoặc PowerPoint.
 
 ## Trạng thái hiện tại
 
-Hai yêu cầu kỹ thuật **HDFS + demo ALS theo User ID** đã có triển khai và bằng chứng chạy thật. Báo cáo/slide hiện là bản thảo Markdown; chưa xác nhận hoàn tất Word/PPT, thông tin thành viên, chạy lại trên máy thứ hai và diễn tập bảo vệ. Không đánh dấu toàn bộ tuần 8 hoàn thành trước khi có các sản phẩm này.
+Hai yêu cầu kỹ thuật **HDFS + demo ALS theo User ID** đã có triển khai và bằng chứng chạy thật. Báo cáo Word và PowerPoint theo mẫu đã được tạo. Còn cần điền thông tin nhóm, xác nhận chạy trên máy bảo vệ và diễn tập. Không đánh dấu toàn bộ tuần 8 hoàn thành trước khi xác nhận các bước này.

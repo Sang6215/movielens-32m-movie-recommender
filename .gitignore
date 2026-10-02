@@ -20,6 +20,7 @@ __pycache__/
 /artifacts/demo/
 /artifacts/als_serving/
 /artifacts/cache/
+/artifacts/releases/
 
 # Local Spark/Hadoop runtime files and temporary output
 /.hadoop/
@@ -43,6 +44,16 @@ reports/tables/_stack_smoke_*/
 # Temporary/editor files
 ~$*
 /Huong_dan_do_an_Nhap_mon_Big_Data_HUIT.docx
+/Group3_Quản lý khách sạn_Phase1.docx
+/Group3_Quản lý khách sạn_Phase1.pdf
+/vie_16x9_slide-nhan-dien-huit.pptx
+/reports/*.docx
+/reports/*.pptx
+/cine32-demo-*.zip
+/SHA256SUMS.txt
+/DEMO_PACKAGE_MANIFEST.json
+/DEMO_README.md
+/licenses/MovieLens32M_README.txt
 *.tmp
 *.temp
 *.bak
