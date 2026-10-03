@@ -63,6 +63,10 @@ jobs:
           else:
               raise RuntimeError('Website did not become ready')
 
+          # Exercise concurrent cold requests before catalog or model is cached.
+          with ThreadPoolExecutor(max_workers=4) as pool:
+              responses = list(pool.map(lambda uid: json.loads(read('/api/als/recommendations?user_id=' + str(uid))), [1, 2, 100, 500]))
+          assert all(result['knownUser'] and len(result['items']) == 10 for result in responses)
           meta = json.loads(read('/api/meta'))
           assert meta['totalMovies'] == 87585, meta
           assert meta['tmdbConfigured'] is False
@@ -79,9 +83,6 @@ jobs:
           assert not unknown['knownUser'] and unknown['strategy'] == 'weighted_score_fallback'
           assert len(unknown['items']) == 10
           assert all(item['predictionScore'] is None for item in unknown['items'])
-          with ThreadPoolExecutor(max_workers=4) as pool:
-              responses = list(pool.map(lambda uid: json.loads(read('/api/als/recommendations?user_id=' + str(uid))), [1, 2, 100, 500]))
-          assert all(result['knownUser'] and len(result['items']) == 10 for result in responses)
           print('PASS: website, health, catalog, placeholder, ALS and fallback')
           PY
           docker stats --no-stream --format 'RAM: {{.MemUsage}}; CPU: {{.CPUPerc}}' cine32-check

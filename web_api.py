@@ -12,6 +12,7 @@ import re
 import sys
 from functools import lru_cache
 from pathlib import Path
+from threading import Lock
 from typing import Any, Mapping
 from urllib.parse import urlsplit
 
@@ -49,6 +50,8 @@ PAGE_SIZE = 24
 FEATURED_MOVIE_IDS = (318, 202439, 858, 79132)
 POSTER_LOADER = get_poster_loader()
 TMDB_TOKEN = get_tmdb_token()
+CATALOG_LOAD_LOCK = Lock()
+ALS_LOAD_LOCK = Lock()
 
 
 def configured_cors_origins() -> list[str]:
@@ -96,7 +99,9 @@ def _load_catalog(version: tuple[int, int]) -> pd.DataFrame:
 
 
 def _catalog() -> pd.DataFrame:
-    return _load_catalog(_file_version(CATALOG_PATH))
+    # lru_cache can compute a cache miss in multiple threads simultaneously.
+    with CATALOG_LOAD_LOCK:
+        return _load_catalog(_file_version(CATALOG_PATH))
 
 
 @lru_cache(maxsize=2)
@@ -118,8 +123,10 @@ def _load_als(artifact_version: tuple[int, int], manifest_version: tuple[int, in
 def _als() -> ALSRecommender:
     if not (ALS_DIR / "factors_and_history.npz").exists() or not (ALS_DIR / "manifest.json").exists():
         raise HTTPException(status_code=503, detail="Chưa có dữ liệu ALS. Chạy scripts/12_prepare_als_serving.py trước.")
-    return _load_als(_file_version(ALS_DIR / "factors_and_history.npz"),
-                     _file_version(ALS_DIR / "manifest.json"), _file_version(CATALOG_PATH))
+    # Serialize first loads so concurrent visitors share one resident model.
+    with ALS_LOAD_LOCK:
+        return _load_als(_file_version(ALS_DIR / "factors_and_history.npz"),
+                         _file_version(ALS_DIR / "manifest.json"), _file_version(CATALOG_PATH))
 
 
 def _optional_int(value: Any) -> int | None:
