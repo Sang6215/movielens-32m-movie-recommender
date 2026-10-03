@@ -2,6 +2,11 @@ name: Check Docker deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      memory:
+        description: Container RAM limit (for example 512m or 1g)
+        default: 1g
+        type: string
   push:
     branches: [main]
     paths:
@@ -29,12 +34,15 @@ jobs:
       - name: Build image with verified demo artifacts
         run: docker build -t cine32-deployment-check .
       - name: Start website without a TMDB token
-        run: docker run -d --name cine32-check -p 127.0.0.1:8502:8502 cine32-deployment-check
+        env:
+          CINE32_MEMORY: ${{ inputs.memory || '1g' }}
+        run: docker run -d --name cine32-check --memory "$CINE32_MEMORY" --memory-swap "$CINE32_MEMORY" -p 127.0.0.1:8502:8502 cine32-deployment-check
       - name: Verify website and recommendation endpoints
         shell: bash
         run: |
           python3 - <<'PY'
           import json
+          from concurrent.futures import ThreadPoolExecutor
           import time
           import urllib.error
           import urllib.request
@@ -71,8 +79,14 @@ jobs:
           assert not unknown['knownUser'] and unknown['strategy'] == 'weighted_score_fallback'
           assert len(unknown['items']) == 10
           assert all(item['predictionScore'] is None for item in unknown['items'])
+          with ThreadPoolExecutor(max_workers=4) as pool:
+              responses = list(pool.map(lambda uid: json.loads(read('/api/als/recommendations?user_id=' + str(uid))), [1, 2, 100, 500]))
+          assert all(result['knownUser'] and len(result['items']) == 10 for result in responses)
           print('PASS: website, health, catalog, placeholder, ALS and fallback')
           PY
+          docker stats --no-stream --format 'RAM: {{.MemUsage}}; CPU: {{.CPUPerc}}' cine32-check
+          docker exec cine32-check cat /sys/fs/cgroup/memory.peak
+          docker inspect --format 'OOMKilled: {{.State.OOMKilled}}' cine32-check
       - name: Show logs on failure
         if: failure()
         run: docker logs cine32-check || true
