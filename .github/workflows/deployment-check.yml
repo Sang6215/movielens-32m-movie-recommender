@@ -1,0 +1,81 @@
+name: Check Docker deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - requirements-web.txt
+      - web_api.py
+      - src/recommender/**
+      - assets/poster_placeholder.svg
+      - scripts/15_install_demo_artifacts.py
+      - .github/workflows/deployment-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build image with verified demo artifacts
+        run: docker build -t cine32-deployment-check .
+      - name: Start website without a TMDB token
+        run: docker run -d --name cine32-check -p 127.0.0.1:8502:8502 cine32-deployment-check
+      - name: Verify website and recommendation endpoints
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import time
+          import urllib.error
+          import urllib.request
+
+          base = 'http://127.0.0.1:8502'
+
+          def read(path):
+              with urllib.request.urlopen(base + path, timeout=30) as response:
+                  return response.read()
+
+          for attempt in range(60):
+              try:
+                  health = json.loads(read('/api/health'))
+                  assert health['status'] == 'ready', health
+                  break
+              except (OSError, urllib.error.URLError):
+                  time.sleep(1)
+          else:
+              raise RuntimeError('Website did not become ready')
+
+          meta = json.loads(read('/api/meta'))
+          assert meta['totalMovies'] == 87585, meta
+          assert meta['tmdbConfigured'] is False
+          assert b'<html' in read('/').lower()
+          assert b'<svg' in read('/media/poster-placeholder.svg')
+          movies = json.loads(read('/api/movies?genres=Comedy'))
+          assert len(movies['items']) == 24
+          assert all('Comedy' in item['genres'] for item in movies['items'])
+          known = json.loads(read('/api/als/recommendations?user_id=1'))
+          assert known['knownUser'] and known['strategy'] == 'als'
+          assert len(known['items']) == 10
+          assert known['items'][0]['predictionScore'] is not None
+          unknown = json.loads(read('/api/als/recommendations?user_id=999999'))
+          assert not unknown['knownUser'] and unknown['strategy'] == 'weighted_score_fallback'
+          assert len(unknown['items']) == 10
+          assert all(item['predictionScore'] is None for item in unknown['items'])
+          print('PASS: website, health, catalog, placeholder, ALS and fallback')
+          PY
+      - name: Show logs on failure
+        if: failure()
+        run: docker logs cine32-check || true
+      - name: Stop test container
+        if: always()
+        run: docker rm -f -v cine32-check || true

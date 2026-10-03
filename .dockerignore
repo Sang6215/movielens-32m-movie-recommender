@@ -1,0 +1,20 @@
+# Send only the runtime source listed in Dockerfile to the Docker builder.
+# Credentials, data, reports, caches and temporary files stay outside the context.
+**
+!Dockerfile
+!requirements-web.txt
+!web_api.py
+!THIRD_PARTY_NOTICES.md
+!src/
+!src/recommender/
+!src/recommender/__init__.py
+!src/recommender/config.py
+!src/recommender/genre_recommender.py
+!src/recommender/als_recommender.py
+!src/recommender/poster_cache.py
+!src/recommender/poster_loader.py
+!src/recommender/tmdb_client.py
+!assets/
+!assets/poster_placeholder.svg
+!scripts/
+!scripts/15_install_demo_artifacts.py

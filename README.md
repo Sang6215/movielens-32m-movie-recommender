@@ -12,6 +12,10 @@ HDFS và demo gợi ý cá nhân theo User ID: [Hướng dẫn HDFS + ALS](HUONG
 
 Các bước tải, giải nén và kiểm tra checksum: [Hướng dẫn chạy demo](HUONG_DAN_CHAY_DEMO.md). Muốn tái tạo thí nghiệm train hoặc HDFS, dùng các hướng dẫn bên dưới.
 
+## Đưa website/API lên Internet
+
+[Hướng dẫn triển khai Docker và Render](HUONG_DAN_DEPLOY_WEB.md) mô tả cách chạy web với model đã train và đặt token TMDB riêng trên máy chủ để mọi người truy cập có poster. GitHub lưu mã nguồn và artifact; cần hosting chạy FastAPI để có URL website/API công khai. Hiện chưa xác nhận dịch vụ hosting hoạt động. Token không được đưa vào GitHub hoặc frontend; người clone để tự chạy backend cần token riêng.
+
 ## Tài liệu báo cáo
 
 - [Báo cáo dạng Markdown](reports/BAO_CAO_BIG_DATA_THEO_MAU.md).

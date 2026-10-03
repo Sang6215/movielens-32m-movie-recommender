@@ -7,16 +7,18 @@ catalog and reuses its genre ranking and TMDB poster cache.
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping
+from urllib.parse import urlsplit
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 ROOT = Path(__file__).resolve().parent
@@ -48,10 +50,34 @@ FEATURED_MOVIE_IDS = (318, 202439, 858, 79132)
 POSTER_LOADER = get_poster_loader()
 TMDB_TOKEN = get_tmdb_token()
 
+
+def configured_cors_origins() -> list[str]:
+    """Allow the local frontend and explicitly configured browser origins."""
+    origins = ["http://127.0.0.1:5173", "http://localhost:5173"]
+    for value in os.environ.get("CINE32_CORS_ORIGINS", "").split(","):
+        origin = value.strip().rstrip("/")
+        if not origin:
+            continue
+        parsed = urlsplit(origin)
+        if (
+            parsed.scheme not in {"http", "https"}
+            or not parsed.hostname
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.path
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise ValueError("CINE32_CORS_ORIGINS phải gồm các origin http/https, phân cách bằng dấu phẩy.")
+        if origin not in origins:
+            origins.append(origin)
+    return origins
+
+
 app = FastAPI(title="Cine32 movie catalog", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=configured_cors_origins(),
     allow_methods=["GET"],
     allow_headers=["*"],
 )
@@ -212,6 +238,23 @@ def select_movies(
             | display_titles.str.contains(term, case=False, regex=False, na=False)
         ]
     return ranked
+
+
+@app.get("/api/health", tags=["Vận hành"], summary="Kiểm tra tệp phục vụ website")
+def health() -> JSONResponse:
+    catalog_ready = CATALOG_PATH.is_file() and MANIFEST_PATH.is_file()
+    als_ready = (ALS_DIR / "factors_and_history.npz").is_file() and (ALS_DIR / "manifest.json").is_file()
+    frontend_ready = (DIST_DIR / "index.html").is_file()
+    ready = catalog_ready and als_ready and frontend_ready
+    return JSONResponse(
+        status_code=200 if ready else 503,
+        content={
+            "status": "ready" if ready else "not_ready",
+            "catalogReady": catalog_ready,
+            "alsReady": als_ready,
+            "frontendReady": frontend_ready,
+        },
+    )
 
 
 @app.get("/api/meta")
