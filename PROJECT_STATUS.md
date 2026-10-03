@@ -94,6 +94,14 @@ Repository công khai chứa mã nguồn, tài liệu Markdown, sơ đồ và c�
 - Có manifest SHA-256 từng file và README điều kiện sử dụng MovieLens. Hướng dẫn: [HUONG_DAN_CHAY_DEMO.md](HUONG_DAN_CHAY_DEMO.md); script tạo lại: `scripts/14_package_demo.py`.
 - Chạy web từ gói không cần train lại, Spark, HDFS hay Node.js. Cần Python 3.11+ và thư viện web; poster thật cần token TMDB riêng. Gói không chứa token, cache, file tạm, Word hoặc PowerPoint.
 
+### Website và API công khai (03/10/2026)
+
+- Website: [CINE32](https://cine32-movie-recommender.onrender.com/); tài liệu API: [Swagger UI](https://cine32-movie-recommender.onrender.com/docs).
+- Đã triển khai Docker trên Render Free, Singapore, 512 MB RAM, một worker; token TMDB giữ trong Environment của máy chủ. Người truy cập website không cần token riêng.
+- Đã kiểm tra HTTPS, 87.585 phim, lọc thể loại, ALS User 1, fallback User 999999 và poster/mô tả TMDB thật. 15 kiểm tra tự động đạt; Docker Linux giới hạn 512 MB đã vượt qua bốn request ALS đồng thời lúc nạp lần đầu.
+- Gói Free ngủ sau 15 phút không có truy cập và có các hạn mức của Render. Đây là bản demo đã kiểm tra, chưa có thử tải lớn. Hướng dẫn vận hành: [HUONG_DAN_DEPLOY_WEB.md](HUONG_DAN_DEPLOY_WEB.md).
+- Backend đã khóa quá trình nạp catalog/model để tránh nhiều bản cùng được tạo khi có request đồng thời. Thay đổi tài liệu, báo cáo, tests và workflow được bỏ qua khi auto-deploy.
+
 ## Trạng thái hiện tại
 
 Hai yêu cầu kỹ thuật **HDFS + demo ALS theo User ID** đã có triển khai và bằng chứng chạy thật. Báo cáo Word và PowerPoint theo mẫu đã được tạo. Còn cần điền thông tin nhóm, xác nhận chạy trên máy bảo vệ và diễn tập. Không đánh dấu toàn bộ tuần 8 hoàn thành trước khi xác nhận các bước này.

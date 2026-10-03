@@ -2,9 +2,14 @@
 
 Mục tiêu: mọi người mở một URL để dùng giao diện CINE32 hoặc gọi API của ứng dụng. Máy chủ của chủ dự án gọi TMDB bằng token riêng; trình duyệt người dùng chỉ nhận thông tin phim và URL ảnh, không nhận token.
 
-**Trạng thái:** repository đã có mã nguồn và gói demo. Hướng dẫn này chuẩn bị triển khai; chưa có dịch vụ hosting hoặc URL công khai đã được xác nhận hoạt động.
+**Trạng thái ngày 03/10/2026:** đã triển khai trên Render Free, vùng Singapore, 512 MB RAM, một Uvicorn worker. Dịch vụ đã báo Live và đã được kiểm tra từ client bên ngoài qua HTTPS:
 
-**Đã kiểm tra ngày 03/10/2026:** 14 kiểm tra tự động trên máy phát triển đạt; token TMDB hiện tại lấy được poster thật. [Kiểm tra Docker trên GitHub Actions](https://github.com/Sang6215/movielens-32m-movie-recommender/actions/runs/37121015901) đã build và chạy image Linux thành công, kiểm tra giao diện, health, catalog, ALS và fallback. Lượt kiểm tra Docker dùng ảnh thay thế, không truyền token TMDB vào runner hoặc image. Đây là kiểm tra bộ triển khai, chưa tạo dịch vụ hosting lâu dài.
+- Website: [https://cine32-movie-recommender.onrender.com/](https://cine32-movie-recommender.onrender.com/).
+- Tài liệu API: [Swagger UI](https://cine32-movie-recommender.onrender.com/docs).
+- Schema: [OpenAPI](https://cine32-movie-recommender.onrender.com/openapi.json).
+- Trạng thái: [Health](https://cine32-movie-recommender.onrender.com/api/health).
+
+**Đã kiểm tra:** 15 kiểm tra tự động trên máy phát triển đạt. [Docker Linux giới hạn 512 MB RAM](https://github.com/Sang6215/movielens-32m-movie-recommender/actions/runs/37121573665) chạy thành công với bốn yêu cầu ALS đồng thời ngay lúc chưa có cache. Kiểm tra trên dịch vụ thật xác nhận catalog 87.585 phim, lọc thể loại, Top 10 User 1 đúng artifact đã kiểm chứng, fallback User 999999, poster và mô tả TMDB thật, cùng các đường dẫn giao diện/tài liệu/health. Token chỉ nằm trong cấu hình riêng của Render; không truyền vào GitHub Actions hoặc Docker image.
 
 ## 1. GitHub và hosting có vai trò gì?
 
@@ -89,14 +94,14 @@ docker stop cine32-web
 
 ## 4. Triển khai thủ công trên Render
 
-Các bước sau được đối chiếu với tài liệu Render ngày 03/10/2026. Chưa tạo dịch vụ hoặc chọn gói trả phí trong quá trình chuẩn bị repository.
+Các bước sau được đối chiếu với tài liệu Render ngày 03/10/2026. Dịch vụ hiện tại dùng gói Free theo lựa chọn của chủ dự án; không chọn gói compute trả phí.
 
 ### 4.1. Tạo Web Service từ repository
 
 1. Đăng nhập [Render Dashboard](https://dashboard.render.com/).
 2. Chọn **New → Web Service**.
 3. Kết nối GitHub của chủ repository và chọn `Sang6215/movielens-32m-movie-recommender`.
-4. Chọn branch chứa các file triển khai, dự kiến `main` sau khi cập nhật mã nguồn lên GitHub.
+4. Chọn branch `main`, đã có các file triển khai.
 5. Chọn **Language/Runtime: Docker**; Dockerfile Path là `./Dockerfile`, build context là thư mục gốc.
 6. Để Docker Command mặc định để chạy `CMD` trong Dockerfile.
 7. Tự chọn region và tài nguyên phù hợp sau khi xem phép đo RAM tại mục 6.
@@ -133,7 +138,9 @@ Nếu health check thất bại, xem lỗi thiếu artifact, checksum, cổng ho
 
 Cache SQLite ở `/app/artifacts/cache` có thể tạo lại từ TMDB. Nếu hosting có ổ lưu trữ bền vững, mount đúng thư mục này để giữ cache; không mount đè toàn bộ `/app/artifacts`, vì thư mục cha còn chứa catalog và vector ALS trong image.
 
-Render Free tạm dừng sau 15 phút không có request; lần truy cập tiếp theo có thể cần khoảng một phút khởi động. Dữ liệu mới ghi vào filesystem bị mất khi restart, redeploy hoặc tạm dừng; Free không hỗ trợ persistent disk. Với CINE32, điều này khiến cache metadata phải tải lại, còn artifact nằm sẵn trong image. Dịch vụ miễn phí cũng có giới hạn giờ chạy, băng thông và build; xem [giới hạn Render Free](https://render.com/docs/free) trước khi chọn. Với mô hình hiện tại, không khuyến nghị instance 512 MB để đảm bảo phần ALS có đủ RAM; xem phép đo bên dưới.
+Render Free tạm dừng sau 15 phút không có request; lần truy cập tiếp theo có thể cần khoảng một phút khởi động. Dữ liệu mới ghi vào filesystem bị mất khi restart, redeploy hoặc tạm dừng; Free không hỗ trợ persistent disk. Với CINE32, điều này khiến cache metadata phải tải lại, còn artifact nằm sẵn trong image. Dịch vụ miễn phí cũng có giới hạn giờ chạy, băng thông và build; xem [giới hạn Render Free](https://render.com/docs/free) trước khi chọn. Bản demo đã chạy và được kiểm tra trong giới hạn 512 MB, chưa chứng minh phục vụ tải lớn ổn định.
+
+Dịch vụ hiện bỏ qua thay đổi `*.md`, `reports/**`, `tests/**` và `.github/**` khi tự deploy. Sửa tài liệu sẽ không build lại image. Đổi mã runtime hoặc Dockerfile vẫn tự kích hoạt triển khai từ `main`.
 
 ## 5. Dùng API từ một website khác
 
@@ -164,7 +171,9 @@ Chạy một worker vì mỗi worker nạp riêng catalog, vector ALS và chỉ 
 | Sau khi gọi ALS | 459,49 MiB | 444,90 MiB |
 | Mức cao nhất ghi nhận | 462,96 MiB | 448,37 MiB |
 
-**Nên chọn máy có ít nhất 1 GB RAM cho một worker; cân nhắc 2 GB nếu cần nhiều request đồng thời.** Đây là ước lượng từ phép đo trên Windows, chưa phải benchmark image Linux hoặc hosting. Mức 512 MB có rất ít phần dư sau khi nạp ALS. Người triển khai tự xem tài nguyên và giá trên dashboard; lựa chọn đáp ứng mức RAM này có thể cần gói trả phí.
+Kiểm tra Docker Linux riêng với giới hạn cứng 512 MB, không swap, đã chạy được catalog, ALS và fallback. [Lượt kiểm tra đầu tiên](https://github.com/Sang6215/movielens-32m-movie-recommender/actions/runs/37121423195) ghi nhận khoảng 434,3 MiB sử dụng sau các request; cgroup memory peak 462.917.632 byte (khoảng 441,47 MiB), `OOMKilled=false`. Lượt kiểm tra mới nhất bổ sung bốn request ALS đồng thời ngay khi mô hình chưa được nạp; backend dùng khóa lúc nạp catalog và model để tránh tạo nhiều bản trong RAM.
+
+**Gói 512 MB phù hợp với bản demo đã kiểm tra; nên dùng từ 1 GB RAM nếu mở rộng tải, cân nhắc 2 GB cho nhiều request đồng thời.** Các phép đo trên Windows và kiểm tra ngắn trong Docker không thay thế kiểm thử tải dài trên hosting. Chủ dự án đã chọn thử gói Free; không tự nâng cấp lên gói trả phí.
 
 Kích thước ZIP không thể dùng làm mức RAM tối thiểu. Kiểm tra lại RAM sau khi gọi cả catalog, ALS và poster trên máy chủ thật, rồi đánh giá thêm tải đồng thời.
 
@@ -172,12 +181,12 @@ Docker image này triển khai **ứng dụng phục vụ gợi ý đã huấn l
 
 Nếu dùng hosting Docker khác Render, cần các cấu hình tương đương: build từ Dockerfile, HTTPS phía reverse proxy/nền tảng, kết nối tới cổng container 8502, runtime secret TMDB, health check `/api/health`, đủ RAM và thư mục cache có quyền ghi.
 
-## 7. Những bước cuối chủ dự án cần làm
+## 7. Vận hành dịch vụ đã triển khai
 
-- Tạo hoặc đăng nhập tài khoản hosting.
-- Chọn tài nguyên và xác nhận chi phí của nền tảng mình dùng.
-- Nhập token TMDB qua dashboard của hosting.
-- Khởi chạy deploy và gửi URL HTTPS thật để kiểm tra từ bên ngoài.
-- Sau khi kiểm tra thành công, bổ sung URL website và API vào README.
+- Chia sẻ URL website hoặc `/docs`; người dùng không cần token TMDB.
+- Trước buổi bảo vệ, mở website sớm để dịch vụ Free khởi động và poster nạp vào cache.
+- Theo dõi Logs, Metrics và hạn mức Free trên dashboard của Render. Chỉ đổi gói trả phí khi chủ dự án chọn ngân sách phù hợp.
+- Nếu thay token TMDB, cập nhật biến `TMDB_READ_ACCESS_TOKEN` trong Environment rồi deploy lại. Không ghi token vào mã nguồn.
+- Các thay đổi chỉ gồm tài liệu đã được lọc khỏi auto-deploy. Nếu thay frontend, cần build và phát hành artifact mới, cập nhật URL/checksum trong installer trước khi deploy; Docker hiện dùng frontend từ gói v1.0.0.
 
 Word, PowerPoint, file mẫu, cache, token và file tạm vẫn lưu ngoài GitHub. Điều kiện sử dụng dữ liệu và nguồn MovieLens: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

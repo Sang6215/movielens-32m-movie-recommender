@@ -14,7 +14,11 @@ Các bước tải, giải nén và kiểm tra checksum: [Hướng dẫn chạy 
 
 ## Đưa website/API lên Internet
 
-[Hướng dẫn triển khai Docker và Render](HUONG_DAN_DEPLOY_WEB.md) mô tả cách chạy web với model đã train và đặt token TMDB riêng trên máy chủ để mọi người truy cập có poster. GitHub lưu mã nguồn và artifact; cần hosting chạy FastAPI để có URL website/API công khai. Hiện chưa xác nhận dịch vụ hosting hoạt động. Token không được đưa vào GitHub hoặc frontend; người clone để tự chạy backend cần token riêng.
+- **Website:** [CINE32 trực tuyến](https://cine32-movie-recommender.onrender.com/).
+- **Tài liệu API:** [Swagger UI](https://cine32-movie-recommender.onrender.com/docs).
+- **Kiểm tra dịch vụ:** [Health](https://cine32-movie-recommender.onrender.com/api/health).
+
+Đã triển khai và kiểm tra ngày 03/10/2026 trên Render Free, Singapore, 512 MB RAM, một worker. Người truy cập website dùng chung poster TMDB qua backend; token được giữ trong cấu hình riêng của Render. Gói miễn phí ngủ khi không có truy cập trong 15 phút, nên lượt mở tiếp theo có thể cần khoảng một phút khởi động. Đây là bản demo, chưa kiểm thử tải lớn. Xem [hướng dẫn triển khai và vận hành](HUONG_DAN_DEPLOY_WEB.md). Người clone repository để tự chạy backend vẫn cần token riêng.
 
 ## Tài liệu báo cáo
 
