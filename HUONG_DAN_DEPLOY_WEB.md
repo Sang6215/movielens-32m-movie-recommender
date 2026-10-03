@@ -4,6 +4,8 @@ Mục tiêu: mọi người mở một URL để dùng giao diện CINE32 hoặc
 
 **Trạng thái:** repository đã có mã nguồn và gói demo. Hướng dẫn này chuẩn bị triển khai; chưa có dịch vụ hosting hoặc URL công khai đã được xác nhận hoạt động.
 
+**Đã kiểm tra ngày 03/10/2026:** 14 kiểm tra tự động trên máy phát triển đạt; token TMDB hiện tại lấy được poster thật. [Kiểm tra Docker trên GitHub Actions](https://github.com/Sang6215/movielens-32m-movie-recommender/actions/runs/37121015901) đã build và chạy image Linux thành công, kiểm tra giao diện, health, catalog, ALS và fallback. Lượt kiểm tra Docker dùng ảnh thay thế, không truyền token TMDB vào runner hoặc image. Đây là kiểm tra bộ triển khai, chưa tạo dịch vụ hosting lâu dài.
+
 ## 1. GitHub và hosting có vai trò gì?
 
 - GitHub lưu mã nguồn, hướng dẫn và gói demo đã huấn luyện trên [Releases v1.0.0](https://github.com/Sang6215/movielens-32m-movie-recommender/releases/tag/v1.0.0).
