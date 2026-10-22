@@ -83,3 +83,5 @@ Docker đã chuyển sang build frontend từ mã nguồn trong repository. Cata
 - Frontend: `npm test` trong `frontend/` — 4 bài kiểm tra về tách lịch sử, lưu/tải lại, đánh dấu lặp và dữ liệu lỗi.
 - `npm run build` đạt.
 - Kiểm tra trình duyệt: tạo Minh/Lan, đánh dấu phim, chuyển hồ sơ và tải lại trang. Trước buổi trình chiếu cần mở lại website và kiểm tra poster/kết nối Internet.
+
+**Đã triển khai ngày 22/10/2026:** [mở mục Cho bạn trên CINE32](https://cine32-movie-recommender.onrender.com/#personalized). Render đã báo Live cho commit `4ccd237`; [kiểm tra Docker Linux giới hạn 512 MB](https://github.com/Sang6215/movielens-32m-movie-recommender/actions/runs/39710275929) đạt, gồm cả frontend mới và API gợi ý từ lịch sử. Kiểm tra trên website thật xác nhận tạo Minh/Lan, lịch sử riêng, bỏ đánh dấu và giữ hồ sơ sau tải lại.

@@ -111,5 +111,6 @@ Repository công khai chứa mã nguồn, tài liệu Markdown, sơ đồ và c�
 - Mục Demo ALS được giữ riêng và chỉ tải khi mở. Luồng hồ sơ mới không train lại ALS hoặc gán điểm ALS cho user demo.
 - 19 bài kiểm tra backend, 4 bài frontend và build giao diện đạt; kiểm tra trình duyệt xác nhận Minh/Lan có lịch sử riêng và giữ sau tải lại. Hướng dẫn: [HUONG_DAN_DEMO_HO_SO.md](HUONG_DAN_DEMO_HO_SO.md).
 - Docker build frontend từ mã nguồn hiện tại; catalog và vector vẫn dùng gói v1.0.0 có kiểm tra checksum.
+- Render đã Live bản `4ccd237`; kiểm tra Docker giới hạn 512 MB và API/giao diện công khai đều đạt. [Mở hồ sơ demo](https://cine32-movie-recommender.onrender.com/#personalized).
 
 Hai yêu cầu kỹ thuật **HDFS + demo ALS theo User ID** đã có triển khai và bằng chứng chạy thật. Báo cáo Word và PowerPoint theo mẫu đã được tạo. Còn cần điền thông tin nhóm, xác nhận chạy trên máy bảo vệ và diễn tập. Không đánh dấu toàn bộ tuần 8 hoàn thành trước khi xác nhận các bước này.
