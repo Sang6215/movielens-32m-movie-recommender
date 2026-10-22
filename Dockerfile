@@ -1,3 +1,13 @@
+FROM node:22-slim AS frontend-build
+WORKDIR /build/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/index.html frontend/tsconfig*.json frontend/vite.config.ts ./
+COPY frontend/src ./src
+COPY frontend/public ./public
+COPY frontend/tests ./tests
+RUN npm test && npm run build
+
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -18,6 +28,7 @@ COPY src/recommender/__init__.py \
      src/recommender/config.py \
      src/recommender/genre_recommender.py \
      src/recommender/als_recommender.py \
+     src/recommender/history_recommender.py \
      src/recommender/poster_cache.py \
      src/recommender/poster_loader.py \
      src/recommender/tmdb_client.py ./src/recommender/
@@ -27,8 +38,11 @@ COPY scripts/15_install_demo_artifacts.py ./scripts/
 # The checksum-pinned public release contains the catalog, ALS and built frontend.
 # Supply TMDB_READ_ACCESS_TOKEN only as a runtime environment variable.
 RUN python scripts/15_install_demo_artifacts.py --output-dir /app \
+    && python -c "import shutil; shutil.rmtree('/app/frontend/dist')" \
     && mkdir -p /app/artifacts/cache \
     && chown app:app /app/artifacts/cache
+
+COPY --from=frontend-build /build/frontend/dist ./frontend/dist
 
 USER 10001:10001
 VOLUME ["/app/artifacts/cache"]

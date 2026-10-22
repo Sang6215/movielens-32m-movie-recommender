@@ -65,9 +65,9 @@ export default function PersonalRecommendations({ renderMovie, onOpen, onMovieUp
   }
 
   return (
-    <section className="discover-section personal-section" id="personalized" aria-labelledby="personal-title">
+    <section className="discover-section personal-section" id="als-demo" aria-labelledby="personal-title">
       <div className="section-heading">
-        <div><span className="section-eyebrow">GỢI Ý CÁ NHÂN</span><h2 id="personal-title">Phim dành cho bạn</h2></div>
+        <div><span className="section-eyebrow">THỰC NGHIỆM MOVIELENS</span><h2 id="personal-title">Demo mô hình ALS</h2></div>
         <p>Chọn một người dùng MovieLens để khám phá 10 phim mới dựa trên lịch sử đánh giá.</p>
       </div>
       <div className="personal-controls">

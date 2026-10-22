@@ -13,7 +13,7 @@ import sys
 from functools import lru_cache
 from pathlib import Path
 from threading import Lock
-from typing import Any, Mapping
+from typing import Annotated, Any, Mapping
 from urllib.parse import urlsplit
 
 import pandas as pd
@@ -21,6 +21,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, ConfigDict, Field
 
 ROOT = Path(__file__).resolve().parent
 SRC_DIR = ROOT / "src"
@@ -34,6 +35,7 @@ from recommender.genre_recommender import (  # noqa: E402
     recommend_by_genres,
 )
 from recommender.als_recommender import ALSRecommender  # noqa: E402
+from recommender.history_recommender import HistoryRecommender  # noqa: E402
 from recommender.poster_cache import PLACEHOLDER_PATH  # noqa: E402
 from recommender.poster_loader import get_poster_loader  # noqa: E402
 from recommender.tmdb_client import (  # noqa: E402
@@ -52,6 +54,7 @@ POSTER_LOADER = get_poster_loader()
 TMDB_TOKEN = get_tmdb_token()
 CATALOG_LOAD_LOCK = Lock()
 ALS_LOAD_LOCK = Lock()
+HISTORY_LOAD_LOCK = Lock()
 
 
 def configured_cors_origins() -> list[str]:
@@ -81,7 +84,7 @@ app = FastAPI(title="Cine32 movie catalog", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=configured_cors_origins(),
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -127,6 +130,24 @@ def _als() -> ALSRecommender:
     with ALS_LOAD_LOCK:
         return _load_als(_file_version(ALS_DIR / "factors_and_history.npz"),
                          _file_version(ALS_DIR / "manifest.json"), _file_version(CATALOG_PATH))
+
+
+@lru_cache(maxsize=1)
+def _load_history_recommender(version: tuple[int, int]) -> HistoryRecommender:
+    return HistoryRecommender(_catalog())
+
+
+def _history_recommender() -> HistoryRecommender:
+    with HISTORY_LOAD_LOCK:
+        return _load_history_recommender(_file_version(CATALOG_PATH))
+
+
+class DemoHistoryRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    movie_ids: list[Annotated[int, Field(strict=True, gt=0, le=2147483647)]] = Field(
+        default_factory=list, max_length=1000,
+        description="MovieLens movie IDs marked as watched, oldest first. Duplicate IDs count once.",
+    )
 
 
 def _optional_int(value: Any) -> int | None:
@@ -214,6 +235,8 @@ def _movie_payload(
         payload["personalRank"] = _optional_int(row.get("rank"))
     if "history_rating" in row:
         payload["historyRating"] = _optional_float(row.get("history_rating"))
+    if "recommendation_reason" in row:
+        payload["recommendationReason"] = str(row["recommendation_reason"])
     return payload
 
 
@@ -317,6 +340,22 @@ def personal_recommendations(user_id: int = Query(ge=0, le=2_147_483_647)) -> di
         "pendingPosters": pending + history_pending,
         "message": "Top 10 phim chưa được người dùng đánh giá."
                    if result.known_user else "Người dùng chưa có lịch sử trong mô hình. Hiển thị phim được cộng đồng đánh giá cao.",
+    }
+
+
+@app.post("/api/demo/recommendations", tags=["Hồ sơ demo"], summary="Gợi ý theo thể loại phim đã xem")
+def demo_recommendations(body: DemoHistoryRequest) -> dict[str, Any]:
+    result = _history_recommender().recommend(body.movie_ids)
+    items, pending = _serialize_rows(result.movies.to_dict(orient="records"))
+    history, history_pending = _serialize_rows(result.history.to_dict(orient="records"))
+    return {
+        "items": items, "history": history,
+        "watchedCount": result.watched_count, "genres": result.genres,
+        "strategy": result.strategy,
+        "pendingPosters": pending + history_pending,
+        "message": "Gợi ý theo thể loại bạn xem nhiều; đã loại các phim được đánh dấu Đã xem."
+                   if result.strategy == "genre_history" else
+                   "Đánh dấu vài phim Đã xem để nhận gợi ý theo sở thích. Hiện đang hiển thị phim được cộng đồng đánh giá cao.",
     }
 
 

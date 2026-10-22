@@ -24,6 +24,7 @@ export interface Movie {
   predictionScore?: number | null;
   personalRank?: number;
   historyRating?: number;
+  recommendationReason?: string;
 }
 
 export interface MetaResponse {
@@ -64,5 +65,13 @@ export interface PersonalResponse extends PosterResponse {
   strategy: "als" | "weighted_score_fallback";
   history: Movie[];
   historyCount: number;
+  message: string;
+}
+
+export interface DemoRecommendationsResponse extends PosterResponse {
+  watchedCount: number;
+  genres: Array<{ id: string; label: string; count: number }>;
+  strategy: "genre_history" | "community_fallback";
+  history: Movie[];
   message: string;
 }

@@ -37,7 +37,7 @@ API hiện phục vụ catalog, lọc phim, poster và gợi ý từ mô hình �
 
 ## 2. Cấu trúc Docker
 
-Dockerfile dùng Python 3.12 slim, cài `requirements-web.txt`, tải gói demo v1.0.0 và kiểm tra SHA-256 trong bước build. Catalog, vector ALS và frontend đã build được lấy từ gói phát hành. Không cần chạy train, cài Spark/Hadoop/Java hoặc build Node.js để khởi động image này.
+Dockerfile dùng hai bước build: Node.js 22 chạy kiểm tra và build frontend từ mã nguồn hiện tại; Python 3.12 slim cài `requirements-web.txt`, tải gói demo v1.0.0 và kiểm tra SHA-256 để lấy catalog cùng vector ALS. Frontend cũ trong gói được thay bằng bản vừa build. Không cần train lại hoặc cài Spark/Hadoop/Java để chạy image; Node.js chỉ dùng trong bước build.
 
 Ứng dụng chạy một Uvicorn worker trên `0.0.0.0:8502`. Đường dẫn cache trong container là `/app/artifacts/cache`. Gói demo nén khoảng 106 MB; kích thước image và RAM khi chạy sẽ lớn hơn kích thước ZIP.
 
@@ -51,7 +51,7 @@ Yêu cầu Docker đang hoạt động với Linux containers. Chạy từ thư 
 docker build -t cine32-web:local .
 ```
 
-Image được build bằng artifact của v1.0.0 nhưng dùng mã nguồn backend tại checkout hiện tại. Token không cần có trong bước build.
+Image dùng catalog và model của v1.0.0, cùng mã nguồn backend và frontend tại checkout hiện tại. Token không cần có trong bước build.
 
 Nhập token cục bộ qua lời nhắc ẩn ký tự; câu lệnh lưu trong lịch sử không chứa giá trị token:
 
@@ -187,6 +187,6 @@ Nếu dùng hosting Docker khác Render, cần các cấu hình tương đương
 - Trước buổi bảo vệ, mở website sớm để dịch vụ Free khởi động và poster nạp vào cache.
 - Theo dõi Logs, Metrics và hạn mức Free trên dashboard của Render. Chỉ đổi gói trả phí khi chủ dự án chọn ngân sách phù hợp.
 - Nếu thay token TMDB, cập nhật biến `TMDB_READ_ACCESS_TOKEN` trong Environment rồi deploy lại. Không ghi token vào mã nguồn.
-- Các thay đổi chỉ gồm tài liệu đã được lọc khỏi auto-deploy. Nếu thay frontend, cần build và phát hành artifact mới, cập nhật URL/checksum trong installer trước khi deploy; Docker hiện dùng frontend từ gói v1.0.0.
+- Các thay đổi chỉ gồm tài liệu đã được lọc khỏi auto-deploy. Khi sửa frontend, Docker tự chạy kiểm tra và build mã nguồn mới. Chỉ cần phát hành lại gói và cập nhật checksum installer nếu thay catalog hoặc vector ALS.
 
 Word, PowerPoint, file mẫu, cache, token và file tạm vẫn lưu ngoài GitHub. Điều kiện sử dụng dữ liệu và nguồn MovieLens: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

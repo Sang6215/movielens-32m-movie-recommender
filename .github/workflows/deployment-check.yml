@@ -15,6 +15,7 @@ on:
       - requirements-web.txt
       - web_api.py
       - src/recommender/**
+      - frontend/**
       - assets/poster_placeholder.svg
       - scripts/15_install_demo_artifacts.py
       - .github/workflows/deployment-check.yml
@@ -42,6 +43,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          import re
           from concurrent.futures import ThreadPoolExecutor
           import time
           import urllib.error
@@ -70,7 +72,10 @@ jobs:
           meta = json.loads(read('/api/meta'))
           assert meta['totalMovies'] == 87585, meta
           assert meta['tmdbConfigured'] is False
-          assert b'<html' in read('/').lower()
+          index = read('/').decode()
+          assert '<html' in index.lower()
+          frontend_script = re.search(r'src="([^"]+\.js)"', index)
+          assert frontend_script and b'cine32.demo.profiles.v1' in read(frontend_script.group(1))
           assert b'<svg' in read('/media/poster-placeholder.svg')
           movies = json.loads(read('/api/movies?genres=Comedy'))
           assert len(movies['items']) == 24
@@ -83,6 +88,12 @@ jobs:
           assert not unknown['knownUser'] and unknown['strategy'] == 'weighted_score_fallback'
           assert len(unknown['items']) == 10
           assert all(item['predictionScore'] is None for item in unknown['items'])
+          request = urllib.request.Request(base + '/api/demo/recommendations', data=json.dumps({'movie_ids': [1, 318, 1]}).encode(), headers={'Content-Type': 'application/json'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              demo = json.load(response)
+          assert demo['watchedCount'] == 2 and demo['genres']
+          assert all(item['movieId'] not in {1, 318} for item in demo['items'])
+          assert all('predictionScore' not in item for item in demo['items'])
           print('PASS: website, health, catalog, placeholder, ALS and fallback')
           PY
           docker stats --no-stream --format 'RAM: {{.MemUsage}}; CPU: {{.CPUPerc}}' cine32-check

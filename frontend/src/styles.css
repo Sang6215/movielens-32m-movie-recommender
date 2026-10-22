@@ -192,3 +192,54 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .history-list button { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-align: left; border: 0; border-radius: 4px; padding: 12px; background: #202020; color: #eee; font-size: 12px; }
 .history-list button strong { flex: none; color: #f5c518; }
 @media (max-width: 600px) { .personal-controls { gap: 16px; } .user-form { width: 100%; } .user-form > div { width: 100%; } .user-form input { min-width: 0; flex: 1; } .history-list { grid-template-columns: 1fr; } }
+
+.header-profile { flex: 0 1 auto; max-width: 145px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; font-weight: 700; color: #f5c518; }
+.demo-profile-section { border-top: 1px solid #333; }
+.profile-toolbar { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 14px; margin: 27px 0 18px; }
+.profile-switcher label, .profile-create-form label { display: block; color: #bcbcbc; font-size: 12px; margin-bottom: 7px; }
+.profile-switcher select, .profile-create-form input { color: #f5f5f5; background: #242424; border: 1px solid #505050; border-radius: 5px; padding: 11px 13px; min-width: 220px; max-width: 100%; }
+.profile-switcher select { cursor: pointer; }
+.profile-create-toggle { border: 1px solid #6b5a19; border-radius: 5px; color: #f5c518; padding: 11px 15px; background: #242015; font-size: 13px; font-weight: 700; }
+.profile-demo-label { margin-left: auto; align-self: center; color: #8e8e8e; font-size: 10px; font-weight: 700; letter-spacing: .07em; }
+.profile-create-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; border: 1px solid #48402c; background: #1d1c18; border-radius: 8px; padding: 22px; }
+.profile-create-form > div { flex: 0 1 320px; min-width: 0; }
+.profile-create-form input { width: 100%; }
+.profile-create-form .primary-action { border: 0; }
+.profile-create-form > p { flex-basis: 100%; margin: 0; color: #999; font-size: 12px; line-height: 1.6; }
+.profile-form-error, .profile-create-form > .profile-form-error { color: #f5aaaa; font-size: 13px; line-height: 1.6; }
+.profile-welcome { display: flex; align-items: center; gap: 20px; color: #bbb; padding: 26px 0 0; }
+.profile-welcome > span { color: #f5c518; font-weight: 800; font-size: 34px; }
+.profile-welcome p { margin: 0; font-size: 14px; line-height: 1.8; }
+.profile-overview { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); gap: 28px; border: 1px solid #353535; border-radius: 8px; padding: 24px; background: #191919; margin-bottom: 25px; }
+.profile-identity { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.profile-avatar { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: #f5c518; color: #171717; font-size: 23px; font-weight: 800; }
+.profile-identity h3 { margin: 0 0 7px; font-size: 18px; overflow-wrap: anywhere; }
+.profile-identity p { color: #aaa; font-size: 12px; margin: 0; line-height: 1.8; }
+.profile-identity p span { padding: 0 6px; }
+.profile-identity a { color: #f5c518; }
+.profile-tastes h3 { font-size: 13px; color: #ddd; margin: 0 0 12px; }
+.profile-tastes > p { font-size: 12px; color: #a0a0a0; }
+.profile-genre-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.profile-genre-chips > span { display: flex; gap: 10px; align-items: center; color: #e7d78f; border: 1px solid #4e4526; background: #292618; border-radius: 5px; padding: 8px 10px; font-size: 12px; }
+.profile-genre-chips strong { font-size: 10px; color: #a99e6d; }
+.profile-tastes > small { display: block; color: #7f7f7f; font-size: 10px; line-height: 1.6; margin-top: 10px; }
+.watched-badge { position: absolute; z-index: 2; top: 10px; right: 10px; background: #1d6544; color: #e7fff2; border-radius: 4px; padding: 5px 7px; font-size: 11px; font-weight: 700; }
+.recommendation-reason { font-size: 10px; color: #c7b573; line-height: 1.5; margin: 8px 0 0; }
+.watch-action { margin: 20px 0 0; }
+.watch-button { background: #f5c518; border: 1px solid #f5c518; padding: 11px 16px; border-radius: 5px; color: #151515; font-size: 13px; font-weight: 800; }
+.watch-button.is-watched { background: #173e2d; color: #aee7c7; border-color: #3e8a62; }
+.watch-action > small { display: block; color: #999; font-size: 11px; line-height: 1.6; margin-top: 9px; }
+.watch-create-link { display: inline-block; color: #f5c518; border: 1px solid #6b5a19; border-radius: 5px; padding: 10px 14px; margin-top: 18px; font-size: 12px; }
+.demo-watch-history > p { font-size: 12px; color: #999; }
+.demo-history-list { display: grid; gap: 8px; margin-top: 14px; }
+.demo-history-list > div { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 12px; background: #232323; border-radius: 5px; }
+.history-movie-title { flex: 1 1 220px; border: 0; background: transparent; text-align: left; color: #eee; font-size: 13px; }
+.demo-history-list > div > span { color: #999; font-size: 11px; }
+.history-remove { border: 1px solid #575757; border-radius: 4px; padding: 7px 10px; color: #ccc; background: transparent; font-size: 11px; }
+.als-demo-shell { max-width: 1448px; margin: 0 auto 48px; border: 1px solid #343434; border-radius: 7px; scroll-margin-top: 90px; }
+.als-demo-shell > summary { cursor: pointer; padding: 20px 24px; color: #ddd; font-size: 14px; font-weight: 700; }
+.als-demo-shell > summary > span { font-weight: 400; color: #888; font-size: 11px; margin-left: 12px; }
+.als-demo-shell .personal-section { border-top: 1px solid #333; }
+@media (max-width: 1500px) { .als-demo-shell { margin-left: 26px; margin-right: 26px; } }
+@media (max-width: 800px) { .header-profile { order: 0; margin-left: auto; } .menu-toggle { margin-left: 0; } .profile-demo-label { flex-basis: 100%; margin-left: 0; } .profile-overview { grid-template-columns: 1fr; gap: 22px; padding: 20px; } .als-demo-shell { margin-left: 16px; margin-right: 16px; } }
+@media (max-width: 600px) { .profile-switcher { flex: 1; min-width: 0; } .profile-switcher select { min-width: 0; width: 100%; } .profile-create-form { padding: 16px; } .profile-create-form > div { flex-basis: 100%; } .profile-create-form input { min-width: 0; } .profile-create-form > button { width: 100%; justify-content: center; } .als-demo-shell > summary { padding: 17px; line-height: 1.6; } .als-demo-shell > summary > span { display: block; margin-left: 0; } .profile-identity p span { padding: 0 2px; } }

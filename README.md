@@ -20,6 +20,12 @@ Các bước tải, giải nén và kiểm tra checksum: [Hướng dẫn chạy 
 
 Đã triển khai và kiểm tra ngày 03/10/2026 trên Render Free, Singapore, 512 MB RAM, một worker. Người truy cập website dùng chung poster TMDB qua backend; token được giữ trong cấu hình riêng của Render. Gói miễn phí ngủ khi không có truy cập trong 15 phút, nên lượt mở tiếp theo có thể cần khoảng một phút khởi động. Đây là bản demo, chưa kiểm thử tải lớn. Xem [hướng dẫn triển khai và vận hành](HUONG_DAN_DEPLOY_WEB.md). Người clone repository để tự chạy backend vẫn cần token riêng.
 
+## Demo tạo user và học thể loại đã xem
+
+Mục **Cho bạn** cho phép tạo hồ sơ bằng tên, chuyển user, đánh dấu phim **Đã xem** và nhận gợi ý dựa trên những thể loại xuất hiện nhiều trong lịch sử. Hồ sơ lưu trên trình duyệt đang trình chiếu, không cần tài khoản Neon hoặc mật khẩu. Mục **Demo ALS** giữ phần minh họa mô hình MovieLens đã huấn luyện.
+
+Kịch bản Minh/Lan, API và hướng dẫn vận hành: [HUONG_DAN_DEMO_HO_SO.md](HUONG_DAN_DEMO_HO_SO.md).
+
 ## Tài liệu báo cáo
 
 - [Báo cáo dạng Markdown](reports/BAO_CAO_BIG_DATA_THEO_MAU.md).

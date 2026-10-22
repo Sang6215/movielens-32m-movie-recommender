@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useId, useState, type FormEvent } from "react";
 import { getFeatured, getMeta, getMovies, getPosters } from "./api";
 import PersonalRecommendations from "./PersonalRecommendations";
+import DemoRecommendations from "./DemoRecommendations";
+import { DemoProfilesProvider, useDemoProfiles, WatchedButton } from "./DemoProfiles";
 import type { MetaResponse, Movie, MoviesResponse } from "./types";
 
 const formatNumber = new Intl.NumberFormat("vi-VN");
@@ -71,10 +73,12 @@ function Pagination({ page, totalPages, onPageChange }: { page: number; totalPag
 }
 
 function MovieCard({ movie, onOpen }: { movie: Movie; onOpen: (movie: Movie) => void }) {
+  const { isWatched } = useDemoProfiles();
   return (
     <button type="button" className="movie-card" onClick={() => onOpen(movie)} aria-label={`Xem chi tiết ${movie.displayTitle}`}>
       <div className="movie-poster-wrap">
         {movie.personalRank && <span className="personal-rank">#{movie.personalRank}</span>}
+        {isWatched(movie.movieId) && <span className="watched-badge">✓ Đã xem</span>}
         <img src={movie.posterUrl} alt={`Poster phim ${movie.displayTitle}`} loading="lazy" onError={(event) => { event.currentTarget.src = PLACEHOLDER; }} />
       </div>
       <div className="movie-card-body">
@@ -82,6 +86,7 @@ function MovieCard({ movie, onOpen }: { movie: Movie; onOpen: (movie: Movie) => 
         {movie.predictionScore !== undefined && movie.predictionScore !== null && <p className="als-score">Điểm ALS <strong>{movie.predictionScore.toFixed(2).replace(".", ",")}</strong></p>}
         <h3>{movie.displayTitle}</h3>
         <p className="card-genres">{movie.genresVi.slice(0, 3).join(" · ") || "Chưa phân loại"}</p>
+        {movie.recommendationReason && <p className="recommendation-reason">{movie.recommendationReason}</p>}
         <span className="card-detail">Chi tiết phim <ArrowIcon /></span>
       </div>
     </button>
@@ -118,6 +123,7 @@ function MovieModal({ movie, onClose }: { movie: Movie; onClose: () => void }) {
             <h3>Nội dung phim</h3>
             <p className="overview">{movie.overview || (movie.posterPending ? "Đang tải nội dung phim..." : "Chưa có mô tả cho phim này.")}</p>
             {movie.overviewLang === "en" && <p className="language-note">Mô tả bằng tiếng Anh do TMDB chưa có bản tiếng Việt.</p>}
+            <WatchedButton movieId={movie.movieId} onCreateProfile={onClose} />
             <div className="external-links">
               {movie.tmdbUrl && <a href={movie.tmdbUrl} target="_blank" rel="noopener noreferrer">Xem trên TMDB <ArrowIcon /></a>}
               {movie.imdbUrl && <a href={movie.imdbUrl} target="_blank" rel="noopener noreferrer">Trang IMDb <ArrowIcon /></a>}
@@ -130,6 +136,8 @@ function MovieModal({ movie, onClose }: { movie: Movie; onClose: () => void }) {
 }
 
 function App() {
+  const { activeProfile } = useDemoProfiles();
+  const [showALSDemo, setShowALSDemo] = useState(false);
   const [meta, setMeta] = useState<MetaResponse | null>(null);
   const [featured, setFeatured] = useState<Movie[]>([]);
   const [featuredPending, setFeaturedPending] = useState(0);
@@ -236,7 +244,8 @@ function App() {
           <nav className={`main-nav ${mobileNavOpen ? "open" : ""}`} aria-label="Điều hướng chính">
             <a href="#discover" onClick={() => setMobileNavOpen(false)}>Khám phá</a>
             <a href="#genres" onClick={() => setMobileNavOpen(false)}>Thể loại</a>
-            <a href="#personalized" onClick={() => setMobileNavOpen(false)}>Gợi ý ALS</a>
+            <a href="#personalized" onClick={() => setMobileNavOpen(false)}>Cho bạn</a>
+            <a href="#als-lab" onClick={() => { setMobileNavOpen(false); setShowALSDemo(true); }}>Demo ALS</a>
             <a href="#about" onClick={() => setMobileNavOpen(false)}>Nguồn dữ liệu</a>
           </nav>
           <form className="header-search" role="search" onSubmit={submitSearch}>
@@ -244,7 +253,7 @@ function App() {
             {searchDraft && <button className="clear-search" type="button" onClick={() => { setSearchDraft(""); setSearch(""); setPage(1); }} aria-label="Xóa tìm kiếm">×</button>}
             <button className="search-submit" type="submit" aria-label="Tìm phim"><SearchIcon /></button>
           </form>
-          <span className="header-source">MOVIELENS <b>32M</b></span>
+          <a className="header-profile" href="#personalized">{activeProfile ? `● ${activeProfile.name}` : "+ Tạo hồ sơ"}</a>
         </div>
       </header>
 
@@ -315,7 +324,11 @@ function App() {
             <div className="bottom-pagination"><span>{formatNumber.format(results.total)} phim trong kết quả</span><Pagination page={results.page} totalPages={results.totalPages} onPageChange={changePage} /></div>
           </>}
         </section>
-        <PersonalRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />
+        <DemoRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />
+        <details className="als-demo-shell" id="als-lab" open={showALSDemo} onToggle={event => setShowALSDemo(event.currentTarget.open)}>
+          <summary>Minh họa mô hình ALS từ dữ liệu MovieLens <span>Dùng khi trình bày kết quả huấn luyện</span></summary>
+          {showALSDemo && <PersonalRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />}
+        </details>
       </main>
 
       <footer id="about" className="site-footer">
@@ -328,4 +341,4 @@ function App() {
   );
 }
 
-export default App;
+export default function Cine32App() { return <DemoProfilesProvider><App /></DemoProfilesProvider>; }

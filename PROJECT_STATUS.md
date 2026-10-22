@@ -104,4 +104,12 @@ Repository công khai chứa mã nguồn, tài liệu Markdown, sơ đồ và c�
 
 ## Trạng thái hiện tại
 
+### Bổ sung hồ sơ user để trình chiếu (22/10/2026)
+
+- Tạo hồ sơ bằng tên, chuyển giữa các user và đánh dấu/bỏ đánh dấu phim Đã xem. Lịch sử lưu riêng trên trình duyệt, không yêu cầu đăng nhập hoặc cơ sở dữ liệu ngoài.
+- Đếm thể loại từ các phim đã đánh dấu, mỗi phim tính một lần; gợi ý 12 phim chưa xem theo tần suất thể loại và xếp hạng cộng đồng. User chưa có lịch sử nhận danh sách cộng đồng.
+- Mục Demo ALS được giữ riêng và chỉ tải khi mở. Luồng hồ sơ mới không train lại ALS hoặc gán điểm ALS cho user demo.
+- 19 bài kiểm tra backend, 4 bài frontend và build giao diện đạt; kiểm tra trình duyệt xác nhận Minh/Lan có lịch sử riêng và giữ sau tải lại. Hướng dẫn: [HUONG_DAN_DEMO_HO_SO.md](HUONG_DAN_DEMO_HO_SO.md).
+- Docker build frontend từ mã nguồn hiện tại; catalog và vector vẫn dùng gói v1.0.0 có kiểm tra checksum.
+
 Hai yêu cầu kỹ thuật **HDFS + demo ALS theo User ID** đã có triển khai và bằng chứng chạy thật. Báo cáo Word và PowerPoint theo mẫu đã được tạo. Còn cần điền thông tin nhóm, xác nhận chạy trên máy bảo vệ và diễn tập. Không đánh dấu toàn bộ tuần 8 hoàn thành trước khi xác nhận các bước này.
