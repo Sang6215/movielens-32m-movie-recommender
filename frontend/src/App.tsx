@@ -296,6 +296,8 @@ function App() {
           <p>Điểm đánh giá cộng đồng từ <b>MovieLens 32M</b>.</p>
         </section>
 
+        <DemoRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />
+
         <section className="discover-section" id="discover">
           <div className="section-heading">
             <div><span className="section-eyebrow">KHÁM PHÁ THEO SỞ THÍCH</span><h2>Chọn phim cho tối nay <ArrowIcon /></h2></div>
@@ -324,7 +326,6 @@ function App() {
             <div className="bottom-pagination"><span>{formatNumber.format(results.total)} phim trong kết quả</span><Pagination page={results.page} totalPages={results.totalPages} onPageChange={changePage} /></div>
           </>}
         </section>
-        <DemoRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />
         <details className="als-demo-shell" id="als-lab" open={showALSDemo} onToggle={event => setShowALSDemo(event.currentTarget.open)}>
           <summary>Minh họa mô hình ALS từ dữ liệu MovieLens <span>Dùng khi trình bày kết quả huấn luyện</span></summary>
           {showALSDemo && <PersonalRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />}
