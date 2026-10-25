@@ -48,6 +48,7 @@ CATALOG_PATH = ROOT / "artifacts" / "catalog" / "movie_catalog.parquet"
 MANIFEST_PATH = ROOT / "artifacts" / "catalog" / "manifest.json"
 DIST_DIR = ROOT / "frontend" / "dist"
 ALS_DIR = ROOT / "artifacts" / "als_serving"
+ANALYTICS_PATH = ROOT / "assets" / "bigdata_analytics.json"
 PAGE_SIZE = 24
 FEATURED_MOVIE_IDS = (318, 202439, 858, 79132)
 POSTER_LOADER = get_poster_loader()
@@ -312,6 +313,18 @@ def featured() -> dict[str, Any]:
     )
     items, pending = _serialize_rows(rows)
     return {"items": items, "pendingPosters": pending}
+
+
+@lru_cache(maxsize=1)
+def _load_analytics(version: tuple[int, int]) -> dict[str, Any]:
+    return json.loads(ANALYTICS_PATH.read_text(encoding="utf-8"))
+
+
+@app.get("/api/analytics", tags=["Phân tích Big Data"], summary="Số liệu tổng hợp và kết quả thực nghiệm Big Data")
+def analytics() -> dict[str, Any]:
+    if not ANALYTICS_PATH.is_file():
+        raise HTTPException(status_code=503, detail="Chưa có số liệu phân tích Big Data.")
+    return _load_analytics(_file_version(ANALYTICS_PATH))
 
 
 @app.get("/api/als/meta")
