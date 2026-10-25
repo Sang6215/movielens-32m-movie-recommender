@@ -5,7 +5,7 @@ on:
     inputs:
       memory:
         description: Container RAM limit (for example 512m or 1g)
-        default: 1g
+        default: 512m
         type: string
   push:
     branches: [main]
@@ -16,7 +16,7 @@ on:
       - web_api.py
       - src/recommender/**
       - frontend/**
-      - assets/poster_placeholder.svg
+      - assets/**
       - scripts/15_install_demo_artifacts.py
       - .github/workflows/deployment-check.yml
 
@@ -36,7 +36,7 @@ jobs:
         run: docker build -t cine32-deployment-check .
       - name: Start website without a TMDB token
         env:
-          CINE32_MEMORY: ${{ inputs.memory || '1g' }}
+          CINE32_MEMORY: ${{ inputs.memory || '512m' }}
         run: docker run -d --name cine32-check --memory "$CINE32_MEMORY" --memory-swap "$CINE32_MEMORY" -p 127.0.0.1:8502:8502 cine32-deployment-check
       - name: Verify website and recommendation endpoints
         shell: bash
@@ -72,6 +72,13 @@ jobs:
           meta = json.loads(read('/api/meta'))
           assert meta['totalMovies'] == 87585, meta
           assert meta['tmdbConfigured'] is False
+          analytics = json.loads(read('/api/analytics'))
+          assert analytics['schemaVersion'] == 1
+          assert analytics['dataset']['ratings'] == 32000204
+          assert analytics['model']['fitRows'] + analytics['model']['testRows'] == analytics['dataset']['ratings']
+          assert sum(row['value'] for row in analytics['dataset']['ratingsDistribution']) == analytics['dataset']['ratings']
+          assert analytics['hdfs']['modelRetrained'] is False
+          assert b'C:\\Users' not in read('/api/analytics')
           index = read('/').decode()
           assert '<html' in index.lower()
           frontend_script = re.search(r'src="([^"]+\.js)"', index)
@@ -94,7 +101,7 @@ jobs:
           assert demo['watchedCount'] == 2 and demo['genres']
           assert all(item['movieId'] not in {1, 318} for item in demo['items'])
           assert all('predictionScore' not in item for item in demo['items'])
-          print('PASS: website, health, catalog, placeholder, ALS and fallback')
+          print('PASS: website, health, catalog, analytics, placeholder, ALS and fallback')
           PY
           docker stats --no-stream --format 'RAM: {{.MemUsage}}; CPU: {{.CPUPerc}}' cine32-check
           docker exec cine32-check cat /sys/fs/cgroup/memory.peak

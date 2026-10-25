@@ -17,6 +17,7 @@
 !src/recommender/tmdb_client.py
 !assets/
 !assets/poster_placeholder.svg
+!assets/bigdata_analytics.json
 !scripts/
 !scripts/15_install_demo_artifacts.py
 !frontend/

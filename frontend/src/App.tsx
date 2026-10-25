@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState, type FormEvent } from "react";
+import { lazy, Suspense, useCallback, useEffect, useId, useState, type FormEvent } from "react";
 import { getFeatured, getMeta, getMovies, getPosters } from "./api";
 import PersonalRecommendations from "./PersonalRecommendations";
 import DemoRecommendations from "./DemoRecommendations";
@@ -7,6 +7,7 @@ import type { MetaResponse, Movie, MoviesResponse } from "./types";
 
 const formatNumber = new Intl.NumberFormat("vi-VN");
 const PLACEHOLDER = "/media/poster-placeholder.svg";
+const BigDataAnalytics = lazy(() => import("./BigDataAnalytics"));
 
 function SearchIcon() {
   return (
@@ -137,6 +138,7 @@ function MovieModal({ movie, onClose }: { movie: Movie; onClose: () => void }) {
 
 function App() {
   const { activeProfile } = useDemoProfiles();
+  const [isAnalytics, setIsAnalytics] = useState(window.location.hash === "#analytics");
   const [showALSDemo, setShowALSDemo] = useState(false);
   const [meta, setMeta] = useState<MetaResponse | null>(null);
   const [featured, setFeatured] = useState<Movie[]>([]);
@@ -160,13 +162,27 @@ function App() {
   }, []);
 
   useEffect(() => {
+    function navigate() {
+      const hash = window.location.hash;
+      setIsAnalytics(hash === "#analytics");
+      if (hash === "#als-lab") setShowALSDemo(true);
+      if (hash === "#analytics") window.scrollTo({ top: 0 });
+      else window.requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" }));
+    }
+    window.addEventListener("hashchange", navigate);
+    return () => window.removeEventListener("hashchange", navigate);
+  }, []);
+
+  useEffect(() => {
+    if (isAnalytics) return;
     const controller = new AbortController();
     getMeta(controller.signal).then(setMeta).catch(() => undefined);
     getFeatured(controller.signal).then((data) => { setFeatured(data.items); setFeaturedPending(data.pendingPosters); }).catch(() => undefined);
     return () => controller.abort();
-  }, []);
+  }, [isAnalytics]);
 
   useEffect(() => {
+    if (isAnalytics) return;
     const controller = new AbortController();
     setLoading(true);
     setError("");
@@ -176,11 +192,11 @@ function App() {
       .catch((cause: unknown) => { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Không thể tải danh sách phim."); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [selectedGenres, search, page, retry]);
+  }, [selectedGenres, search, page, retry, isAnalytics]);
 
   const resultIds = results?.items.map((movie) => movie.movieId).join(",") ?? "";
   useEffect(() => {
-    if (!results?.pendingPosters || !resultIds) return;
+    if (isAnalytics || !results?.pendingPosters || !resultIds) return;
     const movieIds = resultIds.split(",").map(Number);
     let active = true;
     const timer = window.setInterval(() => {
@@ -194,11 +210,11 @@ function App() {
       }).catch(() => undefined);
     }, 1400);
     return () => { active = false; window.clearInterval(timer); };
-  }, [resultIds, results?.pendingPosters]);
+  }, [resultIds, results?.pendingPosters, isAnalytics]);
 
   const featuredIds = featured.map((movie) => movie.movieId).join(",");
   useEffect(() => {
-    if (!featuredPending || !featuredIds) return;
+    if (isAnalytics || !featuredPending || !featuredIds) return;
     const movieIds = featuredIds.split(",").map(Number);
     let active = true;
     const timer = window.setInterval(() => {
@@ -210,7 +226,7 @@ function App() {
       }).catch(() => undefined);
     }, 1400);
     return () => { active = false; window.clearInterval(timer); };
-  }, [featuredIds, featuredPending]);
+  }, [featuredIds, featuredPending, isAnalytics]);
 
   function toggleGenre(genre: string) {
     setSelectedGenres((current) => current.includes(genre) ? current.filter((item) => item !== genre) : [...current, genre]);
@@ -222,6 +238,7 @@ function App() {
     setSearch(searchDraft.trim());
     setPage(1);
     setMobileNavOpen(false);
+    if (isAnalytics) window.location.hash = "discover";
     scrollToResults();
   }
 
@@ -246,6 +263,7 @@ function App() {
             <a href="#genres" onClick={() => setMobileNavOpen(false)}>Thể loại</a>
             <a href="#personalized" onClick={() => setMobileNavOpen(false)}>Cho bạn</a>
             <a href="#als-lab" onClick={() => { setMobileNavOpen(false); setShowALSDemo(true); }}>Demo ALS</a>
+            <a href="#analytics" aria-current={isAnalytics ? "page" : undefined} onClick={() => setMobileNavOpen(false)}>Big Data</a>
             <a href="#about" onClick={() => setMobileNavOpen(false)}>Nguồn dữ liệu</a>
           </nav>
           <form className="header-search" role="search" onSubmit={submitSearch}>
@@ -258,6 +276,7 @@ function App() {
       </header>
 
       <main id="top">
+        {isAnalytics ? <Suspense fallback={<div className="analytics-loading" role="status">Đang mở trang phân tích…</div>}><BigDataAnalytics /></Suspense> : <>
         <section className="hero-shell" aria-label="Phim nổi bật">
           <div className="hero-main" style={{ backgroundImage: heroMovie?.backdropUrl ? `url("${heroMovie.backdropUrl}")` : undefined }}>
             <div className="hero-shade" />
@@ -330,6 +349,7 @@ function App() {
           <summary>Minh họa mô hình ALS từ dữ liệu MovieLens <span>Dùng khi trình bày kết quả huấn luyện</span></summary>
           {showALSDemo && <PersonalRecommendations renderMovie={(movie) => <MovieCard movie={movie} onOpen={setSelectedMovie} />} onOpen={setSelectedMovie} onMovieUpdate={updateOpenMovie} />}
         </details>
+        </>}
       </main>
 
       <footer id="about" className="site-footer">

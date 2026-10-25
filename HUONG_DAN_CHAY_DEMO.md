@@ -2,6 +2,8 @@
 
 **Cập nhật 22/10/2026:** gói v1.0.0 giữ giao diện tại thời điểm phát hành. Để demo tạo user và ghi nhận phim Đã xem, dùng website đã cập nhật hoặc mã nguồn `main` và build frontend theo [hướng dẫn hồ sơ demo](HUONG_DAN_DEMO_HO_SO.md). Catalog/model vẫn dùng được từ gói cũ, không cần train lại.
 
+**Trang phân tích Big Data:** bản `main` bổ sung `/#analytics`, dùng số liệu tổng hợp trong mã nguồn. Nếu đang dùng gói v1.0.0, lấy mã nguồn mới và build lại frontend để thấy trang này; không cần thay catalog hoặc vector. Xem [hướng dẫn phân tích](HUONG_DAN_PHAN_TICH_BIGDATA.md).
+
 Gói demo v1.0.0 chứa vector ALS của 200.948 user, chỉ mục 32.000.204 lượt đánh giá, catalog 87.585 phim và frontend đã build. ALS phục vụ Top 10 từ 11.330 phim có ít nhất 100 lượt chấm trong train + validation. Model dùng rank=16, regParam=0,08, maxIter=20, fit trên 28.709.236 dòng train + validation.
 
 Không cần huấn luyện lại hoặc cài Spark, Hadoop, Java và Node.js để chạy web từ gói demo. Gói không bao gồm môi trường Python, tài khoản TMDB, Word, PowerPoint hay runtime HDFS. Pipeline train và HDFS vẫn dùng hướng dẫn riêng trong README.

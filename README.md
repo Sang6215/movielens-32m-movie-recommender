@@ -26,6 +26,12 @@ Mục **Cho bạn** cho phép tạo hồ sơ bằng tên, chuyển user, đánh 
 
 Kịch bản Minh/Lan, API và hướng dẫn vận hành: [HUONG_DAN_DEMO_HO_SO.md](HUONG_DAN_DEMO_HO_SO.md).
 
+## Phân tích Big Data trên website
+
+Mở **Big Data** trong menu hoặc đường dẫn `/#analytics` để xem phân bố rating, thể loại, lịch sử đánh giá theo năm, benchmark CSV–Parquet và Spark local[1/2/4], kết quả ALS, so sánh Top K và sơ đồ pipeline/HDFS. Biểu đồ cho phép chọn điểm, đổi chỉ số, mở bảng và tải JSON tổng hợp. Nguồn là kết quả thực nghiệm đã lưu, không phải thống kê truy cập hoặc giám sát HDFS theo thời gian thực.
+
+Hướng dẫn nguồn số liệu, cập nhật và demo: [HUONG_DAN_PHAN_TICH_BIGDATA.md](HUONG_DAN_PHAN_TICH_BIGDATA.md).
+
 ## Tài liệu báo cáo
 
 - [Báo cáo dạng Markdown](reports/BAO_CAO_BIG_DATA_THEO_MAU.md).

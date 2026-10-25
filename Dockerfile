@@ -33,6 +33,7 @@ COPY src/recommender/__init__.py \
      src/recommender/poster_loader.py \
      src/recommender/tmdb_client.py ./src/recommender/
 COPY assets/poster_placeholder.svg ./assets/
+COPY assets/bigdata_analytics.json ./assets/
 COPY scripts/15_install_demo_artifacts.py ./scripts/
 
 # The checksum-pinned public release contains the catalog, ALS and built frontend.

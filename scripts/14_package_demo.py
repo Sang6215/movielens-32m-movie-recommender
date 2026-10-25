@@ -59,6 +59,7 @@ def main() -> None:
     files = {str(p): ROOT / p for p in [
         "artifacts/catalog/movie_catalog.parquet", "artifacts/catalog/manifest.json",
         "artifacts/als_serving/factors_and_history.npz", "artifacts/als_serving/manifest.json",
+        "assets/bigdata_analytics.json",
     ]}
     dist = ROOT / "frontend/dist"
     assert (dist / "index.html").is_file(), "Build frontend first"

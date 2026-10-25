@@ -75,3 +75,33 @@ export interface DemoRecommendationsResponse extends PosterResponse {
   history: Movie[];
   message: string;
 }
+
+export interface ChartPoint { label: string; value: number }
+
+export interface AnalyticsResponse {
+  schemaVersion: number;
+  snapshot: { trainingDate: string; benchmarkDate: string; hdfsDate: string; kind: string };
+  dataset: {
+    ratings: number; users: number; movies: number; ratedMovies: number; tags: number;
+    firstRating: string; lastRating: string; sparsity: number;
+    ratingsDistribution: ChartPoint[]; genres: ChartPoint[]; ratingsByYear: ChartPoint[];
+  };
+  performance: {
+    storage: Array<{ dataset: string; csv_size_mb: number; parquet_size_mb: number; space_saving_pct: number }>;
+    query: { query: string; master: string; runs: number; csv_times_sec: number[]; parquet_times_sec: number[]; csv_median_sec: number; parquet_median_sec: number; parquet_speedup_x: number };
+    threads: Array<{ master: string; threads: number; train_rows: number; valid_rows: number; total_sec: number; speedup_vs_1_thread: number }>;
+  };
+  model: {
+    trainRows: number; validationRows: number; testRows: number; fitRows: number;
+    params: { rank: number; regParam: number; maxIter: number };
+    test: { rows: number; rmse: number; mae: number; coverage: number };
+    tuning: Array<{ iterations: number; rmse: number; mae: number }>;
+    rankingUsers: number;
+    ranking: Array<{ label: string; candidates: number; precision: number; recall: number; ndcg: number }>;
+  };
+  hdfs: {
+    date: string; dataNodes: number; sparkMaster: string; sparkVersion: string; hadoopVersion: string;
+    modelRetrained: boolean; rawRows: number; readbackRows: number; invalidRows: number; duplicates: number; success: boolean;
+  };
+  sources: Array<{ label: string; path: string }>;
+}

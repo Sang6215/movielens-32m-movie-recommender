@@ -7,6 +7,8 @@
   -webkit-font-smoothing: antialiased;
 }
 
+@media (max-width: 800px) { .main-nav.open { flex-wrap: wrap; } }
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; }

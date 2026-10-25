@@ -1,4 +1,4 @@
-import type { ALSMetaResponse, DemoRecommendationsResponse, MetaResponse, MoviesResponse, PersonalResponse, PosterResponse } from "./types";
+import type { ALSMetaResponse, AnalyticsResponse, DemoRecommendationsResponse, MetaResponse, MoviesResponse, PersonalResponse, PosterResponse } from "./types";
 
 async function getJson<T>(path: string, signal?: AbortSignal, options?: RequestInit): Promise<T> {
   const response = await fetch(path, { ...options, signal });
@@ -11,6 +11,10 @@ async function getJson<T>(path: string, signal?: AbortSignal, options?: RequestI
 
 export function getMeta(signal?: AbortSignal) {
   return getJson<MetaResponse>("/api/meta", signal);
+}
+
+export function getAnalytics(signal?: AbortSignal) {
+  return getJson<AnalyticsResponse>("/api/analytics", signal);
 }
 
 export function getFeatured(signal?: AbortSignal) {

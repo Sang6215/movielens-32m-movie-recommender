@@ -1,0 +1,470 @@
+{
+  "schemaVersion": 1,
+  "snapshot": {
+    "trainingDate": "2026-09-22",
+    "benchmarkDate": "2026-09-25",
+    "hdfsDate": "2026-10-01",
+    "kind": "offline_experiments"
+  },
+  "dataset": {
+    "ratings": 32000204,
+    "users": 200948,
+    "movies": 87585,
+    "ratedMovies": 84432,
+    "tags": 2000072,
+    "firstRating": "1995-01-09 11:46:44",
+    "lastRating": "2023-10-13 02:29:07",
+    "sparsity": 0.9981818097500147,
+    "ratingsDistribution": [
+      {
+        "label": "0.5",
+        "value": 525132
+      },
+      {
+        "label": "1.0",
+        "value": 946675
+      },
+      {
+        "label": "1.5",
+        "value": 531063
+      },
+      {
+        "label": "2.0",
+        "value": 2028622
+      },
+      {
+        "label": "2.5",
+        "value": 1685386
+      },
+      {
+        "label": "3.0",
+        "value": 6054990
+      },
+      {
+        "label": "3.5",
+        "value": 4290105
+      },
+      {
+        "label": "4.0",
+        "value": 8367654
+      },
+      {
+        "label": "4.5",
+        "value": 2974000
+      },
+      {
+        "label": "5.0",
+        "value": 4596577
+      }
+    ],
+    "genres": [
+      {
+        "label": "Drama",
+        "value": 34175
+      },
+      {
+        "label": "Comedy",
+        "value": 23124
+      },
+      {
+        "label": "Thriller",
+        "value": 11823
+      },
+      {
+        "label": "Romance",
+        "value": 10369
+      },
+      {
+        "label": "Action",
+        "value": 9668
+      },
+      {
+        "label": "Documentary",
+        "value": 9363
+      },
+      {
+        "label": "Horror",
+        "value": 8654
+      },
+      {
+        "label": "(no genres listed)",
+        "value": 7080
+      },
+      {
+        "label": "Crime",
+        "value": 6976
+      },
+      {
+        "label": "Adventure",
+        "value": 5402
+      },
+      {
+        "label": "Sci-Fi",
+        "value": 4907
+      },
+      {
+        "label": "Animation",
+        "value": 4617
+      },
+      {
+        "label": "Children",
+        "value": 4520
+      },
+      {
+        "label": "Mystery",
+        "value": 4013
+      },
+      {
+        "label": "Fantasy",
+        "value": 3851
+      },
+      {
+        "label": "War",
+        "value": 2325
+      },
+      {
+        "label": "Western",
+        "value": 1696
+      },
+      {
+        "label": "Musical",
+        "value": 1059
+      },
+      {
+        "label": "Film-Noir",
+        "value": 353
+      },
+      {
+        "label": "IMAX",
+        "value": 195
+      }
+    ],
+    "ratingsByYear": [
+      {
+        "label": "1995",
+        "value": 4
+      },
+      {
+        "label": "1996",
+        "value": 1571368
+      },
+      {
+        "label": "1997",
+        "value": 685388
+      },
+      {
+        "label": "1998",
+        "value": 301691
+      },
+      {
+        "label": "1999",
+        "value": 1174629
+      },
+      {
+        "label": "2000",
+        "value": 1912322
+      },
+      {
+        "label": "2001",
+        "value": 1160098
+      },
+      {
+        "label": "2002",
+        "value": 849762
+      },
+      {
+        "label": "2003",
+        "value": 1011000
+      },
+      {
+        "label": "2004",
+        "value": 1139068
+      },
+      {
+        "label": "2005",
+        "value": 1752573
+      },
+      {
+        "label": "2006",
+        "value": 1141704
+      },
+      {
+        "label": "2007",
+        "value": 1023813
+      },
+      {
+        "label": "2008",
+        "value": 1117071
+      },
+      {
+        "label": "2009",
+        "value": 890696
+      },
+      {
+        "label": "2010",
+        "value": 860073
+      },
+      {
+        "label": "2011",
+        "value": 729301
+      },
+      {
+        "label": "2012",
+        "value": 695493
+      },
+      {
+        "label": "2013",
+        "value": 563301
+      },
+      {
+        "label": "2014",
+        "value": 518537
+      },
+      {
+        "label": "2015",
+        "value": 1743866
+      },
+      {
+        "label": "2016",
+        "value": 1918739
+      },
+      {
+        "label": "2017",
+        "value": 1827953
+      },
+      {
+        "label": "2018",
+        "value": 1391057
+      },
+      {
+        "label": "2019",
+        "value": 1385467
+      },
+      {
+        "label": "2020",
+        "value": 1688159
+      },
+      {
+        "label": "2021",
+        "value": 1239912
+      },
+      {
+        "label": "2022",
+        "value": 913105
+      },
+      {
+        "label": "2023",
+        "value": 794054
+      }
+    ]
+  },
+  "performance": {
+    "storage": [
+      {
+        "dataset": "ratings",
+        "csv_size_mb": 836.45,
+        "parquet_size_mb": 209.44,
+        "space_saving_pct": 74.96
+      },
+      {
+        "dataset": "movies",
+        "csv_size_mb": 4.05,
+        "parquet_size_mb": 2.35,
+        "space_saving_pct": 41.98
+      },
+      {
+        "dataset": "tags",
+        "csv_size_mb": 69.0,
+        "parquet_size_mb": 19.97,
+        "space_saving_pct": 71.06
+      },
+      {
+        "dataset": "links",
+        "csv_size_mb": 1.86,
+        "parquet_size_mb": 1.9,
+        "space_saving_pct": -2.15
+      }
+    ],
+    "query": {
+      "query": "Read 32M ratings + groupBy(movieId).agg(count, avg)",
+      "master": "local[4]",
+      "runs": 3,
+      "csv_times_sec": [
+        27.535,
+        19.69,
+        19.384
+      ],
+      "parquet_times_sec": [
+        3.04,
+        1.642,
+        1.567
+      ],
+      "csv_median_sec": 19.69,
+      "parquet_median_sec": 1.642,
+      "parquet_speedup_x": 11.99
+    },
+    "threads": [
+      {
+        "master": "local[1]",
+        "threads": 1,
+        "train_rows": 2519826,
+        "valid_rows": 314807,
+        "load_and_cache_sec": 4.002,
+        "als_fit_and_eval_sec": 40.121,
+        "total_sec": 44.123,
+        "rmse": 0.836664,
+        "speedup_vs_1_thread": 1.0
+      },
+      {
+        "master": "local[2]",
+        "threads": 2,
+        "train_rows": 2519826,
+        "valid_rows": 314807,
+        "load_and_cache_sec": 2.744,
+        "als_fit_and_eval_sec": 20.388,
+        "total_sec": 23.132,
+        "rmse": 0.836664,
+        "speedup_vs_1_thread": 1.91
+      },
+      {
+        "master": "local[4]",
+        "threads": 4,
+        "train_rows": 2519826,
+        "valid_rows": 314807,
+        "load_and_cache_sec": 2.227,
+        "als_fit_and_eval_sec": 15.636,
+        "total_sec": 17.863,
+        "rmse": 0.836664,
+        "speedup_vs_1_thread": 2.47
+      }
+    ]
+  },
+  "model": {
+    "trainRows": 25520897,
+    "validationRows": 3188339,
+    "testRows": 3290968,
+    "fitRows": 28709236,
+    "params": {
+      "rank": 16,
+      "regParam": 0.08,
+      "maxIter": 20
+    },
+    "test": {
+      "rows": 3282031,
+      "rmse": 0.8128984500769288,
+      "mae": 0.6213796861054994,
+      "coverage": 0.9972843856275722
+    },
+    "tuning": [
+      {
+        "iterations": 5,
+        "rmse": 0.8337907912479361,
+        "mae": 0.6511669858819498
+      },
+      {
+        "iterations": 10,
+        "rmse": 0.8105382189271009,
+        "mae": 0.6245899446172503
+      },
+      {
+        "iterations": 15,
+        "rmse": 0.8037174731137133,
+        "mae": 0.6158471442723601
+      },
+      {
+        "iterations": 20,
+        "rmse": 0.8009518460539962,
+        "mae": 0.6120255415455875
+      }
+    ],
+    "rankingUsers": 10000,
+    "ranking": [
+      {
+        "label": "ALS toàn catalog",
+        "candidates": 77409,
+        "precision": 2e-05,
+        "recall": 6.896551724137931e-06,
+        "ndcg": 1.33052010135729e-05
+      },
+      {
+        "label": "ALS ≥100 lượt chấm",
+        "candidates": 11330,
+        "precision": 0.014670000000000002,
+        "recall": 0.026738281416543042,
+        "ndcg": 0.02258633733948307
+      },
+      {
+        "label": "ALS ≥500 lượt chấm",
+        "candidates": 5760,
+        "precision": 0.021640000000000003,
+        "recall": 0.03618251656229146,
+        "ndcg": 0.030951012286347158
+      },
+      {
+        "label": "Điểm cộng đồng có trọng số",
+        "candidates": 77409,
+        "precision": 0.012310000000000001,
+        "recall": 0.020328312671477507,
+        "ndcg": 0.015090525655455107
+      },
+      {
+        "label": "Phổ biến theo lượt chấm",
+        "candidates": 77409,
+        "precision": 0.03172,
+        "recall": 0.05372815965750183,
+        "ndcg": 0.050040045035458856
+      }
+    ]
+  },
+  "hdfs": {
+    "date": "2026-10-01",
+    "dataNodes": 1,
+    "sparkMaster": "local[4]",
+    "sparkVersion": "3.5.7",
+    "hadoopVersion": "3.3.4",
+    "modelRetrained": false,
+    "rawRows": 32000204,
+    "readbackRows": 32000204,
+    "invalidRows": 0,
+    "duplicates": 0,
+    "success": true
+  },
+  "sources": [
+    {
+      "label": "EDA và phân bố dữ liệu",
+      "path": "reports/tables/eda_summary.csv"
+    },
+    {
+      "label": "Phân bố điểm rating",
+      "path": "reports/tables/rating_distribution.csv"
+    },
+    {
+      "label": "Phim theo thể loại",
+      "path": "reports/tables/genre_distribution.csv"
+    },
+    {
+      "label": "Rating theo năm",
+      "path": "reports/tables/ratings_by_year.csv"
+    },
+    {
+      "label": "Benchmark CSV và Parquet",
+      "path": "reports/tables/bigdata_benchmarks.json"
+    },
+    {
+      "label": "Kết quả ALS full test",
+      "path": "reports/tables/full_iter_20260922_120859/test_metrics.json"
+    },
+    {
+      "label": "Chọn số vòng ALS",
+      "path": "reports/tables/full_iter_20260922_120859/als_tuning.csv"
+    },
+    {
+      "label": "Chẩn đoán và so sánh Top K",
+      "path": "reports/tables/topk_diagnostics_and_baseline.json"
+    },
+    {
+      "label": "Kiểm chứng Spark và HDFS",
+      "path": "reports/tables/hdfs_spark_verification.json"
+    }
+  ]
+}

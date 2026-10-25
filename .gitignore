@@ -39,6 +39,12 @@ __pycache__/
 reports/figures/*.png
 reports/tables/*.csv
 reports/tables/**/*.csv
+# Small public aggregates used to reproduce the analytics page.
+!reports/tables/eda_summary.csv
+!reports/tables/rating_distribution.csv
+!reports/tables/genre_distribution.csv
+!reports/tables/ratings_by_year.csv
+!reports/tables/full_iter_20260922_120859/als_tuning.csv
 reports/tables/_stack_smoke_*/
 
 # Temporary/editor files
